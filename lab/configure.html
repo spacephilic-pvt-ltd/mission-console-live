@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="build" content="presentation-20261004" data-built="2026-10-04T09:50:11Z">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configure your mission · LELP-1</title>
+<meta name="description" content="Configure a satellite, load an experiment, get the payload instructions and the mission plan.">
+
+<script src="../static/theme-init.js?v=presentation-20261004"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lab.css?v=presentation-20261004">
+<link rel="stylesheet" href="../static/workspace.css?v=presentation-20261004">
+<script defer src="../static/workspace.js?v=presentation-20261004"></script>
+</head>
+<body data-workspace="lab" data-lab-page="configure">
+<header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html" class=on>Configure your mission</a><a href="simulate.html">Mission simulation</a><a href="index.html">Overview</a><a href="satellite.html">LELP-1</a><a href="index.html#experiments">Experiments</a><a href="modules.html">Payload modules</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
+<main class="wrap" id="main-content">
+<section class="hero cfg-hero">
+  <div class="lab-eyebrow"><p class="kicker"><i data-lucide="flask-conical"></i> MISSION DESIGN</p><span class="lab-status"><span></span> Local workspace</span></div>
+  <h1>Bring your research<br><span>into orbit.</span></h1>
+  <p class="lede">A focused path from experiment to mission. Choose a spacecraft, define your research, and review the flight that follows.</p>
+  <p class="lab-context"><i data-lucide="info"></i> Design study · Satellite sizing and mission conditions are model estimates.</p>
+</section>
+<nav aria-label="Configuration steps" class="cfg-stepnav"><ol class="cfg-steps" id="cfg-steps">
+  <li data-step="1"><button type="button" data-step="1" aria-controls="cfg-panel-1"><b><i data-lucide="satellite"></i></b><span><small>01 · PLATFORM</small>Spacecraft</span><i data-lucide="chevron-right" class="step-arrow"></i></button></li>
+  <li data-step="2"><button type="button" data-step="2" aria-controls="cfg-panel-2"><b><i data-lucide="microscope"></i></b><span><small>02 · RESEARCH</small>Experiment</span><i data-lucide="chevron-right" class="step-arrow"></i></button></li>
+  <li data-step="3"><button type="button" data-step="3" aria-controls="cfg-panel-3"><b><i data-lucide="clipboard-list"></i></b><span><small>03 · PREPARATION</small>Protocol</span><i data-lucide="chevron-right" class="step-arrow"></i></button></li>
+  <li data-step="4"><button type="button" data-step="4" aria-controls="cfg-panel-4"><b><i data-lucide="orbit"></i></b><span><small>04 · REVIEW</small>Mission plan</span></button></li>
+</ol></nav>
+<div class="cfg">
+  <div class="cfg-main">
+    <section class="cfg-step" id="cfg-panel-1" data-step="1" tabindex="-1" aria-label="Spacecraft configuration"></section>
+    <section class="cfg-step" id="cfg-panel-2" data-step="2" tabindex="-1" aria-label="Experiment selection" hidden></section>
+    <section class="cfg-step" id="cfg-panel-3" data-step="3" tabindex="-1" aria-label="Protocol and payload preparation" hidden></section>
+    <section class="cfg-step" id="cfg-panel-4" data-step="4" tabindex="-1" aria-label="Mission plan" hidden></section>
+    <section class="cfg-cad" hidden><h3>CAD of this experiment's baseline satellite</h3><div class="cad-view" data-name="" data-entry="1"></div>
+      <p class="small cfg-cad-note">Parametric CadQuery model of the baseline design (catalog options); the numbers above follow your options. STEP for engineering, GLB for viewing.</p></section>
+    <div class="cfg-nav"><button type="button" id="cfg-prev" class="btn ghost"><i data-lucide="arrow-left"></i> Back</button><span id="cfg-progress" class="small" aria-live="polite">Step 1 of 4</span><button type="button" id="cfg-next" class="btn">Choose experiment <i data-lucide="arrow-right"></i></button></div>
+  </div>
+  <aside class="cfg-sum card" id="cfg-sum" aria-live="polite"></aside>
+</div>
+<noscript><p>This configurator needs JavaScript.</p></noscript>
+
+</main>
+
+<script src="../static/vendor/three.min.js?v=presentation-20261004"></script><script src="../static/vendor/GLTFLoader.js?v=presentation-20261004"></script><script src="../static/vendor/OrbitControls.js?v=presentation-20261004"></script><script src="cad.js?v=presentation-20261004"></script>
+<footer class="foot"><div class="wrap">
+<p><b>LELP-1 is in design.</b> Bay limits, budgets, timelines and environment numbers come from Space Philic's digital twin of the
+mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
+Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
+each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
+<p class="mono">build 0000000</p>
+</div></footer>
+<script src="satdraw.js?v=presentation-20261004"></script>
+<script src="plan.js?v=presentation-20261004"></script>
+<script src="configure.js?v=presentation-20261004"></script>
+</body>
+</html>

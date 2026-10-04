@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="build" content="presentation-20261004" data-built="2026-10-04T09:50:11Z">
+<meta charset="utf-8">
+
+<script src="static/theme-init.js?v=presentation-20261004"></script>
+<title>Customer Console · LELP-1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/workspace.css?v=presentation-20261004">
+<link rel="stylesheet" href="static/style.css?v=presentation-20261004">
+<link rel="stylesheet" href="static/customer.css?v=presentation-20261004">
+</head>
+<body class="loading customer" data-workspace="customer" data-focus="overview">
+
+<div id="loading" role="status">
+  <div class="ld-brand">SPACE PHILIC</div>
+  <div class="ld-msg" id="ld-msg">Loading your experiment…</div>
+  <div class="ld-bar"><i></i></div>
+  <div class="ld-sub" id="ld-sub">LELP-1 · module 17</div>
+</div>
+
+<header id="topbar">
+  <div class="brand">
+    <span class="brand-main">SPACE PHILIC</span>
+    <span class="brand-sub">CUSTOMER CONSOLE · LELP-1</span>
+  </div>
+  <div class="clock" aria-label="Mission elapsed time">
+    <span class="clock-label" id="met-sign">T−</span><span id="met">00:00:15</span>
+    <span id="phase-pill" class="chip">PRE-LAUNCH</span>
+  </div>
+  <div class="actions"></div>
+</header>
+
+<section class="workspace-heading" aria-labelledby="page-title">
+  <div class="page-title"><div class="eyebrow"><span class="sim-dot"></span> Experiment workspace <span class="version-label">LELP-1</span></div><h1 id="page-title">Your science. In orbit<span class="title-dot">.</span></h1><div class="who"><b>Customer</b><span>Loading your experiment</span></div></div>
+  <nav class="focus-tabs" aria-label="Experiment views">
+    <button class="on" data-focus="overview" aria-pressed="true"><i data-lucide="orbit"></i><span>Overview</span></button>
+    <button data-focus="controls" aria-pressed="false"><i data-lucide="scan-line"></i><span>Lab controls</span></button>
+    <button data-focus="results" aria-pressed="false"><i data-lucide="chart-no-axes-combined"></i><span>Data &amp; records</span></button>
+    <a id="open-focused-view" class="focus-open" href="?view=overview" target="_blank" rel="noopener" title="Open this view in a new browser tab" aria-label="Open this view in a new browser tab"><i data-lucide="arrow-up-right"></i><span>Open view</span></a>
+  </nav>
+</section>
+<main id="main" aria-label="Experiment workspace">
+  <section id="left">
+    <div class="panel" id="panel-sample">
+      <div class="panel-h"><i data-lucide="flask-conical" class="section-icon"></i><h2>Experiment status</h2><span class="chip push" id="m-state">ON THE PAD</span></div>
+      <div class="panel-b">
+        <div class="hero-row">
+          <div class="hero"><span class="lbl">CULTURE BLOCK</span><span class="hero-num"><span id="m-t">—</span><span class="unit">°C</span></span><span class="hero-sub" id="m-t-sub">protocol 37.0 ± 0.3</span></div>
+          <div class="hero"><span class="lbl">PROTOCOL DAY</span><span class="hero-num"><span id="m-day">—</span><span class="unit" id="m-day-unit">of 7</span></span><span class="hero-sub" id="m-day-sub">—</span></div>
+        </div>
+        <div class="kv">
+          <div><span>FLIGHT VIABILITY</span><b id="m-h">—</b></div>
+          <div><span>DOSE</span><b id="m-dose">—</b></div>
+          <div><span>CRYO CASSETTE</span><b id="m-cryo">—</b></div>
+          <div><span>SEAL</span><b id="m-seal">—</b></div>
+        </div>
+        <div class="sub-h"><h3>CULTURE BLOCK · °C</h3><span class="h-sub">last 24 h · band = protocol</span></div>
+        <svg class="chart short" id="chart-t" aria-label="Module 17 culture block temperature over the last two hours"></svg>
+        <div class="sub-h"><h3>EXPERIMENT FLOW</h3><span class="h-sub" id="flow-sub">real time</span></div>
+        <ol class="steps" id="steps"></ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="center">
+    <div id="stage">
+      <canvas id="view3d"></canvas>
+      <div class="stage-top">
+        <div class="stage-left"><div id="overlay-caption" class="hud-chip"></div><div id="ret-readout" class="hud-chip readout" hidden></div></div>
+        <div class="stage-tools"><span class="chip info" id="live-chip" hidden>LIVE TASK · your request</span></div>
+      </div>
+      <div class="stage-footer"><span><i data-lucide="box"></i> Engineering visualization</span><span class="stage-caption-note">SIMULATED MISSION · NOT LIVE TELEMETRY</span></div>
+      <div id="gl-note" class="hud-chip" hidden>3-D view unavailable in this browser (WebGL); telemetry panels are live.</div>
+    </div>
+    <div class="panel" id="drawer">
+      <div class="tabs"><span class="tabs-title"><i data-lucide="scan-line"></i> Dexter-L lab controls</span><span class="tabs-note" id="ctl-note">task-level requests · each one is signed and has to pass Sentinel</span></div>
+      <div class="panel-b">
+        <div class="ctl">
+          <div class="ctl-req">
+            <select id="ctl-module" aria-label="Module">
+              <option value="17">Module · yours</option>
+              <option value="3">Module 3 · another customer's</option>
+            </select>
+            <div class="tasks">
+              <button class="btn" data-task="transfer_to_lab" title="Fetch the module and dock it on the translation rig"><i data-lucide="package-open"></i>Fetch to lab</button>
+              <button class="btn" data-task="image" title="Imaging / analysis pass on the module in the rig"><i data-lucide="scan-eye"></i>Imaging pass</button>
+              <button class="btn" data-task="return" title="Return the module to its slot and release"><i data-lucide="package-check"></i>Return to bay</button>
+              <button class="btn" data-task="full" title="Fetch, analyse in the central lab, return"><i data-lucide="repeat-2"></i>Full cycle</button>
+              <button class="btn danger" id="ctl-abort" title="Stop the arm where it is, brakes on"><i data-lucide="circle-stop"></i>Stop arm</button>
+            </div>
+          </div>
+          <div class="verdict" id="verdict">
+            <div class="dec-final" id="v-final">NO REQUEST YET</div>
+            <div class="dec-t" id="v-paths"></div>
+            <div class="dec-why" id="v-why">Pick a task. Path A checks your signature, ownership and the lab rules; Path B is the mission guardian.</div>
+            <div class="v-ack" id="v-ack" hidden><button class="btn" id="ctl-ack">MCC SIGNS OFF (DEMO)</button><span>operator sign-off needed</span></div>
+          </div>
+          <div class="armlive" id="armlive">
+            <div class="al-head"><span id="al-step">Arm idle · stowed</span><span id="al-t" class="mono"></span></div>
+            <div class="meter"><i id="al-prog" style="width:0"></i></div>
+            <div class="kv">
+              <div><span>GRIP</span><b id="al-grip">—</b></div>
+              <div><span>UMBILICAL</span><b id="al-umb">—</b></div>
+              <div><span>MODULE</span><b id="al-temp">—</b></div>
+              <div><span>WRIST F</span><b id="al-ft">—</b></div>
+            </div>
+            <div class="al-log" id="al-log"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="right">
+    <div class="panel" id="panel-right">
+      <div class="tabs" id="right-tabs">
+        <button data-tab="brief" id="tab-brief" title="Your brief: why, what, who does what, what was stopping you"><i data-lucide="file-text"></i>Brief</button>
+        <button data-tab="cells" class="on"><i data-lucide="microscope"></i>Science</button>
+        <button data-tab="env"><i data-lucide="thermometer"></i>Environment</button>
+        <button data-tab="audit"><i data-lucide="shield-check"></i>Audit</button>
+        <button data-tab="return"><i data-lucide="route"></i>Journey</button>
+      </div>
+      <div class="panel-b">
+        <div class="tabpane" data-pane="brief" hidden><div id="brief"></div></div>
+        <div class="tabpane" data-pane="cells">
+          <div class="stats">
+            <div class="stat"><span>ROUNDS</span><b id="c-rounds">0</b></div>
+            <div class="stat" title="raw frames kept on board, returned with the lab"><span>FRAMES</span><b id="c-frames">0</b></div>
+            <div class="stat" title="per-well metrics and thumbnails sent to you"><span>SENT</span><b id="c-mb">0 MB</b></div>
+          </div>
+          <div class="sub-h"><h3>FOUR GROUPS</h3><span class="h-sub">flight · <span class="gnd">ground control</span></span></div>
+          <table class="tbl gtbl" id="groups" aria-label="Live metrics per group, flight and ground control"></table>
+          <div class="sub-h"><h3 id="chart-title">ROS INDEX</h3><span class="h-sub">by protocol day · dashed = ground</span></div>
+          <svg class="chart" id="chart-ros" aria-label="Main metric per group by protocol day, flight and ground"></svg>
+          <div class="img-note" id="scn-note"></div>
+          <div class="sub-h"><h3 id="img-title">WELLS</h3><span class="h-sub" id="img-cap">cells still cryopreserved</span></div>
+          <svg class="vials" id="vials" aria-label="The 24 wells by group: cell cover from the twin's confluence, colour by group"></svg>
+          <div class="legend" id="well-legend"></div>
+          <div class="sub-h"><h3>DELIVERED TO YOU</h3><span class="h-sub">via Leuk, Switzerland</span></div>
+          <ul class="deliveries" id="deliveries"></ul>
+        </div>
+        <div class="tabpane" data-pane="env" hidden>
+          <div class="stats">
+            <div class="stat"><span>DOSE</span><b id="e-dose">—</b></div>
+            <div class="stat"><span>DOSE RATE</span><b id="e-rate">—</b></div>
+            <div class="stat"><span>SAA PASSES</span><b id="e-saa">—</b></div>
+          </div>
+          <div class="sub-h"><h3>DOSE RATE · <span class="unit-nc">µGy/h</span></h3><span class="h-sub">last 24 h · log scale</span></div>
+          <svg class="chart" id="chart-rate" aria-label="Dosimeter dose rate over the last 24 protocol hours, log scale"></svg>
+          <div class="img-note">Spikes are South Atlantic Anomaly passes; the floor is galactic cosmic rays, higher near the poles. Logged from lab power-on to entry; passive TLDs integrate the whole flight.</div>
+          <div class="stats split" title="Dose by phase: frozen before the thaw, in culture, preserved until entry">
+            <div class="stat"><span>FROZEN</span><b id="e-d0">—</b></div>
+            <div class="stat"><span>IN CULTURE</span><b id="e-d1">—</b></div>
+            <div class="stat"><span>PRESERVED</span><b id="e-d2">—</b></div>
+          </div>
+          <div class="kv one env">
+            <div><span>CULTURE BLOCK</span><b id="e-t">—</b></div>
+            <div><span id="e-cryo-l">CRYO CASSETTE</span><b id="e-cryo">—</b></div>
+            <div><span>PRESSURE</span><b id="e-p">—</b></div>
+            <div><span>SEAL</span><b id="e-seal">—</b></div>
+            <div><span>MEDIUM</span><b>HEPES-buffered · no CO₂ supply</b></div>
+            <div><span>MICROGRAVITY</span><b id="e-ug">—</b></div>
+            <div><span>IMAGING</span><b id="e-img">—</b></div>
+            <div><span>PROTOCOL CLOCK</span><b id="e-clock">—</b></div>
+          </div>
+          <p class="note env-note">A week in this orbit at about 0.6 mGy a day gives a few mGy, far below the doses most in-vitro radiation studies use. In this flight, space against ground mostly measures microgravity; a ground arm irradiated to the dosimeter's measured dose separates the two.</p>
+        </div>
+        <div class="tabpane" data-pane="audit" hidden>
+          <p class="note">Every command that could touch module 17 had to pass the post-quantum signature check and the mission guardian. Refused attempts are listed too.</p>
+          <div class="stats">
+            <div class="stat"><span>ALLOWED</span><b id="a-ok">0</b></div>
+            <div class="stat"><span>REFUSED</span><b id="a-bad">0</b></div>
+            <div class="stat"><span>LEDGER</span><b id="a-ledger">—</b></div>
+          </div>
+          <ol id="audit" class="audit"></ol>
+        </div>
+        <div class="tabpane" data-pane="return" hidden>
+          <ol class="journey" id="journey"></ol>
+          <div class="sub-h"><h3>COMING HOME</h3><span class="h-sub">whole lab · inflatable heat shield</span></div>
+          <div class="return" id="return"></div>
+          <div class="sub-h"><h3>AFTER THE FLIGHT</h3><span class="h-sub">in your lab</span></div>
+          <table class="tbl after" id="after" aria-label="Preserved samples and the endpoints measured from them"></table>
+          <p class="note compare"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="timeline">
+  <div class="transport"><span class="replay-label"><i data-lucide="history"></i>Replay</span>
+    <button class="btn icon primary" id="btn-play" title="Play / pause (space)" aria-label="Play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7Z" fill="currentColor"/></svg></button>
+    <div class="seg" id="speed" role="group" aria-label="Replay speed">
+      <button data-speed="auto" class="on" title="Director pacing: slows down for the key moments">AUTO</button>
+      <button data-speed="1">1×</button><button data-speed="60">60×</button><button data-speed="300">300×</button>
+    </div>
+    <span class="rate" id="rate">×1</span>
+  </div>
+  <div class="track" id="track" role="slider" aria-label="Mission timeline" tabindex="0">
+    <div class="track-bands" id="track-bands"></div>
+    <div class="track-fill" id="track-fill"></div>
+    <div class="track-days" id="track-days"></div>
+    <div class="track-marks" id="track-marks"></div>
+    <div class="track-head" id="track-head"></div>
+    <div class="track-tip" id="track-tip" hidden></div>
+  </div>
+  <div class="scorecard" id="scorecard"></div>
+</footer>
+
+<script src="static/vendor/three.min.js?v=presentation-20261004"></script>
+<script src="static/vendor/GLTFLoader.js?v=presentation-20261004"></script>
+<script src="static/recovery-visuals.js?v=presentation-20261004"></script>
+<script src="static/scene.js?v=presentation-20261004"></script>
+<script src="static/hydrate.js?v=presentation-20261004"></script>
+<script src="static/replay.js?v=presentation-20261004"></script>
+<script src="static/workspace.js?v=presentation-20261004"></script>
+<script src="static/customer.js?v=presentation-20261004"></script>
+</body>
+</html>

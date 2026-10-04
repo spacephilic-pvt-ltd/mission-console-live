@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="build" content="presentation-20261004" data-built="2026-10-04T09:50:11Z">
+<meta charset="utf-8">
+
+<title>Earth & Ground Track · Space Philic</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#091219">
+<script src="static/theme-init.js?v=presentation-20261004"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="static/workspace.css?v=presentation-20261004" rel="stylesheet">
+<script src="static/vendor/lucide.min.js?v=presentation-20261004" defer></script>
+<script src="static/workspace.js?v=presentation-20261004" defer></script>
+<script>window.CESIUM_BASE_URL = 'https://cdn.jsdelivr.net/npm/cesium@1.119.0/Build/Cesium/';</script>
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.119.0/Build/Cesium/Cesium.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.119.0/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<style>
+  :root { --gl-panel: rgba(248,251,255,.96); --gl-line: #c8d6e5; --gl-ink: #1b2d43; --gl-muted: #536b82; --gl-button: #e9f0f8; --gl-active: #dbece9; --gl-accent: #236f66; --gl-shadow: #06152325; }
+  html[data-theme="dark"] { --gl-panel: rgba(15,27,45,.95); --gl-line: #304762; --gl-ink: #e8f0fa; --gl-muted: #a8bbd0; --gl-button: #192c44; --gl-active: #173f3c; --gl-accent: #a2e8d9; --gl-shadow: #0005; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #091219; font-family: Inter, system-ui, sans-serif; color: #edf4f7; }
+  #globe-workspace { position: absolute; inset: 0 0 0 var(--ws-rail, 88px); overflow: hidden; }
+  #cesiumContainer { position: absolute; inset: 0; }
+  .globe-heading { position: absolute; left: 28px; top: 27px; z-index: 5; pointer-events: none; max-width: 460px; text-shadow: 0 2px 10px #000; }
+  .globe-eyebrow { display: block; color: #8ba7b9; font: 500 10px/1.5 'IBM Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; margin-bottom: 9px; }
+  .globe-heading h1 { margin: 0 0 9px; font-size: clamp(24px, 3vw, 36px); font-weight: 500; letter-spacing: -.04em; }
+  .globe-heading p { margin: 0; color: #b6c7d3; font-size: 12px; line-height: 1.6; }
+  .globe-panel { background: var(--gl-panel); border: 1px solid var(--gl-line); border-radius: 13px; box-shadow: 0 12px 36px var(--gl-shadow); backdrop-filter: blur(14px); color: var(--gl-ink); }
+  #globe-details { position: absolute; right: 26px; top: 28px; z-index: 6; max-width: 300px; padding: 13px 16px; font-size: 12px; color: var(--gl-muted); }
+  #globe-details summary { cursor: pointer; font-weight: 600; color: var(--gl-ink); }
+  #globe-details p { margin: 14px 0 0; line-height: 1.7; }
+  #globe-details strong { color: var(--gl-accent); font-weight: 600; }
+  #globe-controls { position: absolute; z-index: 6; left: 26px; bottom: 65px; max-width: calc(100% - 52px); padding: 15px 17px; }
+  .globe-controls-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .globe-controls-row + .globe-controls-row { margin-top: 13px; padding-top: 13px; border-top: 1px solid var(--gl-line); }
+  .globe-control-label { color: var(--gl-muted); font: 10px 'IBM Plex Mono', monospace; letter-spacing: .08em; width: 50px; text-transform: uppercase; }
+  #globe-controls button, #globe-controls select, #globe-error button { min-height: 36px; border: 1px solid var(--gl-line); border-radius: 7px; padding: 8px 12px; font: 500 11px Inter, system-ui, sans-serif; cursor: pointer; color: var(--gl-ink); background: var(--gl-button); }
+  #globe-controls button:hover, #globe-controls select:hover, #globe-error button:hover { border-color: #74cdbf; }
+  #globe-controls button[aria-pressed=true], #globe-controls #play { color: var(--gl-accent); border-color: #6baba0; background: var(--gl-active); }
+  #globe-controls button:disabled { opacity: .4; cursor: not-allowed; }
+  #globe-controls .lucide { width: 15px; height: 15px; margin-right: 5px; }
+  :focus-visible { outline: 2px solid #91e5d2; outline-offset: 3px; }
+  #globe-state { font: 11px/1.4 'IBM Plex Mono', monospace; color: var(--gl-muted); margin: 12px 0 0; }
+  #globe-error { position: absolute; z-index: 10; top: 50%; left: 50%; transform: translate(-50%,-50%); padding: 28px; width: min(420px,calc(100% - 32px)); }
+  #globe-error h2 { margin: 0 0 12px; font-size: 21px; font-weight: 500; }
+  #globe-error p { color: var(--gl-muted); font-size: 13px; line-height: 1.7; }
+  .cesium-viewer-toolbar { top: 145px; right: 26px; }
+  .cesium-viewer-timelineContainer { background: #0c1923; border-color: #2d424f; }
+  .cesium-viewer-bottom { color: #a8bfcc; background: #09121990; font-size: 9px; }
+  .cesium-infoBox { top: 145px; background: #0c1923; }
+  @media(max-width:1100px) { .globe-heading { left: 20px; } #globe-details { top: 26px; right: 20px; max-width: 230px; } }
+  @media(max-width:800px) { .globe-heading p { max-width: 290px; } #globe-details { top: 132px; right: 20px; max-width: 230px; } .cesium-viewer-toolbar { top: 190px; right: 20px; } }
+  @media(max-width:720px) {
+    #globe-workspace { inset: 0 0 74px; }
+    .globe-heading { top: 20px; left: 18px; right: 18px; }
+    .globe-heading h1 { font-size: 26px; }
+    #globe-details { top: 116px; left: 18px; right: auto; max-width: calc(100% - 36px); padding: 10px 13px; }
+    #globe-controls { left: 12px; bottom: 54px; padding: 12px; max-width: calc(100% - 24px); }
+    #globe-controls button, #globe-controls select { min-height: 38px; padding: 7px 9px; font-size: 10px; }
+    .globe-control-label { display: none; }
+    .globe-controls-row { gap: 6px; }
+    #globe-state { font-size: 10px; }
+    .cesium-viewer-toolbar { top: 172px; right: 18px; }
+  }
+</style>
+</head>
+<body data-workspace="globe">
+<main id="globe-workspace" aria-label="Earth and ground track workspace">
+  <div id="cesiumContainer" aria-label="Interactive globe showing the mission twin trajectory"></div>
+  <header class="globe-heading"><span class="globe-eyebrow">Mission geography / LELP-1</span><h1>Earth & ground track</h1><p>Follow the mission from launch to recovery.<br>True-scale WGS-84 Earth · schematic ground tracks</p></header>
+  <details id="globe-details" class="globe-panel"><summary>Mission context & controls</summary><p>The twin launches from <strong>Abdul Kalam Island</strong> on a 192° azimuth toward its 550 km target orbit. Tracks include the booster, orbital lab, relays, ground stations and return capsule.</p><p>Ground tracks are schematic: the exporter places the twin's trajectories along a spherical launch-azimuth path. This view is for mission context, not precision orbit analysis.</p><p>Drag to orbit. Scroll or pinch to zoom. Select a vehicle to follow it while its trajectory is available. Use the timeline below to seek.</p><p>NASA Blue Marble · 5400 × 2700 reference texture with topographic and bathymetric shading (July 2004 composite), served locally. The CesiumJS globe library requires an internet connection.</p></details>
+  <section id="globe-controls" class="globe-panel" aria-label="Globe playback and tracking controls">
+    <div class="globe-controls-row"><span class="globe-control-label">Replay</span><button id="play" type="button" disabled><i data-lucide="play" aria-hidden="true"></i><span>Play mission</span></button><label for="rate" class="globe-control-label" style="width:auto">Speed</label><select id="rate" aria-label="Replay speed"><option value="1">1×</option><option value="20" selected>20×</option><option value="100">100×</option><option value="1000">1,000×</option></select><button id="overview" type="button" disabled><i data-lucide="scan" aria-hidden="true"></i>Overview</button></div>
+    <div id="follow" class="globe-controls-row" role="group" aria-label="Follow a vehicle"><span class="globe-control-label">Follow</span></div>
+    <p id="globe-state" role="status" aria-live="polite">Loading mission trajectories…</p>
+  </section>
+  <section id="globe-error" class="globe-panel" hidden role="alert"><h2>Globe preview unavailable</h2><p id="globe-error-message"></p><button type="button" onclick="location.reload()">Reload globe</button></section>
+</main>
+<script>
+(async () => {
+  const status = document.getElementById('globe-state');
+  let viewer;
+  try {
+    if (!window.Cesium) throw new Error('The globe library did not load. Check your internet connection and reload this workspace.');
+    viewer = new Cesium.Viewer('cesiumContainer', {
+      baseLayer: Cesium.ImageryLayer.fromProviderAsync(Cesium.SingleTileImageryProvider.fromUrl('static/textures/earth-blue-marble.jpg', { credit: new Cesium.Credit('NASA Earth Observatory · Blue Marble Next Generation') })),
+      terrain: undefined, baseLayerPicker: false, geocoder: false, homeButton: false, sceneModePicker: true, navigationHelpButton: false,
+      infoBox: true, selectionIndicator: true, timeline: true, animation: false, shouldAnimate: false,
+      requestRenderMode: true, maximumRenderTimeChange: .5,
+    });
+    viewer.resolutionScale = Math.min(window.devicePixelRatio || 1, 1.5) / (window.devicePixelRatio || 1);
+    viewer.scene.globe.enableLighting = true;
+    viewer.scene.skyAtmosphere.show = true;
+    if (viewer.scene.skyBox) viewer.scene.skyBox.show = false;
+    viewer.scene.globe.showGroundAtmosphere = true;
+    viewer.scene.backgroundColor = Cesium.Color.fromCssColorString('#091219');
+    const ds = await Cesium.CzmlDataSource.load('static/mission.czml.json');
+    await viewer.dataSources.add(ds);
+    if (ds.clock) { viewer.clock.startTime = ds.clock.startTime.clone(); viewer.clock.stopTime = ds.clock.stopTime.clone(); viewer.clock.currentTime = ds.clock.startTime.clone(); viewer.timeline.zoomTo(viewer.clock.startTime, viewer.clock.stopTime); }
+    viewer.clock.multiplier = 20; viewer.clock.shouldAnimate = false;
+    const play = document.getElementById('play'), follow = document.getElementById('follow'), overview = document.getElementById('overview');
+    const resetCamera = () => { viewer.trackedEntity = undefined; viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(88, 2, 2.4e6), orientation: { heading: 0, pitch: Cesium.Math.toRadians(-52), roll: 0 }, duration: 0 }); viewer.scene.requestRender(); };
+    resetCamera();
+    const setActive = id => follow.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.entity === (id || ''))));
+    const returnId = ['LELP-1 return', 'Return capsule'].find(id => ds.entities.getById(id)) || 'LELP-1 return';
+    for (const [label, id] of [['Free view', ''], ['Launcher', 'Stack'], ['Booster', 'Booster'], ['LELP-1', 'Upper stage + LELP-1'], ['Return', returnId]]) {
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.dataset.entity = id; b.setAttribute('aria-pressed', String(!id));
+      b.disabled = !!id && !ds.entities.getById(id);
+      b.onclick = () => { viewer.trackedEntity = id ? ds.entities.getById(id) : undefined; setActive(id); status.textContent = id ? `Following ${label} · shown when the vehicle is active` : 'Free view · drag to explore Earth'; viewer.scene.requestRender(); };
+      follow.appendChild(b);
+    }
+    play.disabled = false; overview.disabled = false;
+    const syncPlay = () => { play.querySelector('span').textContent = viewer.clock.shouldAnimate ? 'Pause mission' : 'Play mission'; play.setAttribute('aria-pressed', String(viewer.clock.shouldAnimate)); };
+    play.onclick = () => { viewer.clock.shouldAnimate = !viewer.clock.shouldAnimate; syncPlay(); status.textContent = viewer.clock.shouldAnimate ? `Mission playing at ${viewer.clock.multiplier.toLocaleString()}×` : 'Mission paused · use the timeline to inspect'; viewer.scene.requestRender(); };
+    document.getElementById('rate').onchange = ev => { viewer.clock.multiplier = Number(ev.target.value); status.textContent = `Replay speed set to ${viewer.clock.multiplier.toLocaleString()}×`; };
+    overview.onclick = () => { resetCamera(); setActive(''); status.textContent = 'Overview · launch and recovery region'; };
+    viewer.clock.onStop.addEventListener(() => { viewer.clock.shouldAnimate = false; syncPlay(); status.textContent = 'Replay complete · seek along the timeline to inspect'; });
+    viewer.scene.renderError.addEventListener(() => { document.getElementById('globe-error-message').textContent = 'The browser stopped rendering the globe. Reload this workspace to reconnect the 3D view.'; document.getElementById('globe-error').hidden = false; });
+    syncPlay(); status.textContent = 'Ready · press Play mission or explore Earth';
+    window.addEventListener('pagehide', ev => { if (!ev.persisted && viewer && !viewer.isDestroyed()) viewer.destroy(); });
+  } catch (error) {
+    document.getElementById('globe-error-message').textContent = error.message || 'The globe could not start. Reload to retry.';
+    document.getElementById('globe-error').hidden = false; status.textContent = 'Globe unavailable · other workspaces remain accessible';
+  }
+})();
+</script>
+</body>
+</html>

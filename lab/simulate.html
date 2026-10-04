@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="build" content="presentation-20261004" data-built="2026-10-04T09:50:11Z">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mission simulation · LELP-1</title>
+<meta name="description" content="Your configured mission, simulated end to end: launch, orbit, your protocol, return, handover.">
+
+<script src="../static/theme-init.js?v=presentation-20261004"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lab.css?v=presentation-20261004">
+<link rel="stylesheet" href="../static/workspace.css?v=presentation-20261004">
+<script defer src="../static/workspace.js?v=presentation-20261004"></script>
+</head>
+<body data-workspace="lab" data-lab-page="simulate">
+<header class="top"><div class="wrap bar"><a class="brand" href="index.html">SPACE PHILIC<span>LELP-1 · LIFE SCIENCE IN ORBIT</span></a><nav><a href="configure.html">Configure your mission</a><a href="simulate.html" class=on>Mission simulation</a><a href="index.html">Overview</a><a href="satellite.html">LELP-1</a><a href="index.html#experiments">Experiments</a><a href="modules.html">Payload modules</a><a href="satellites.html">A satellite per experiment</a><a href="../index.html">Mission console</a></nav></div></header>
+<main class="wrap" id="main-content">
+<section class="sim-hero">
+  <div class="sim-title">
+    <p class="kicker"><i data-lucide="orbit"></i> MISSION REPLAY</p>
+    <h1 id="sim-h1">Your mission, end to end</h1>
+    <p class="sub" id="sim-sub">Loading the twin's data…</p>
+  </div>
+  <div class="sim-clock" aria-live="off">
+    <div class="sim-met mono" id="sim-met">L−24:00:00</div>
+    <div class="sim-utc mono" id="sim-utc"></div>
+    <div><span class="chip info" id="sim-phase">LATE LOAD</span></div>
+  </div>
+</section>
+<section class="sim-ready" id="sim-ready"></section>
+<div class="sim-ctl" aria-label="Simulation controls">
+  <button type="button" class="btn" id="sim-play" disabled><i data-lucide="play"></i> Run mission</button>
+  <div class="seg" id="sim-speed" role="group" aria-label="Playback speed">
+    <button type="button" data-v="auto" class="on" aria-pressed="true">Auto pace</button><button type="button" data-v="60" aria-pressed="false">1 min/s</button><button type="button" data-v="3600" aria-pressed="false">1 h/s</button><button type="button" data-v="86400" aria-pressed="false">1 day/s</button>
+  </div>
+  <button type="button" class="btn ghost" id="sim-restart"><i data-lucide="rotate-ccw"></i> Restart</button>
+  <button type="button" class="btn ghost" id="sim-skip"><i data-lucide="file-chart-column"></i> Report</button>
+  <a class="btn ghost" id="sim-back" href="configure.html"><i data-lucide="sliders-horizontal"></i> Configure <i data-lucide="arrow-right"></i></a>
+</div>
+<div class="sim-timeline-label"><span class="kicker">MISSION TIMELINE</span><span class="small">Drag to seek · Arrow keys when focused</span></div>
+<div class="sim-bar" id="sim-bar" role="slider" tabindex="0" aria-label="Mission time" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" title="Drag or use arrow keys to move through the mission"><div class="sim-phases" id="sim-phases"></div><div class="sim-cursor" id="sim-cursor"></div></div>
+<div class="sim-grid">
+  <div class="sim-main">
+    <div class="card sim-stage" id="sim-scene-stage">
+      <div class="sim-stagebar">
+        <div class="seg" id="sim-tabs" role="group" aria-label="View"><button type="button" data-v="auto" class="on" aria-pressed="true"><i data-lucide="focus"></i> Follow</button><button type="button" data-v="3d" aria-pressed="false"><i data-lucide="box"></i> 3D</button><button type="button" data-v="map" aria-pressed="false"><i data-lucide="globe-2"></i> Ground track</button><button type="button" data-v="ascent" aria-pressed="false"><i data-lucide="rocket"></i> Ascent</button><button type="button" data-v="entry" aria-pressed="false"><i data-lucide="orbit"></i> Return</button></div>
+        <span class="small" id="sim-viewnote"></span>
+        <div class="sim-scene-actions"><button type="button" class="btn ghost" id="sim-scene-play" aria-label="Play scene" aria-pressed="false" disabled><i data-lucide="play"></i> Play scene</button><button type="button" class="btn ghost" id="sim-expand" aria-expanded="false" aria-controls="sim-scene-stage" aria-label="Expand mission scene"><i data-lucide="maximize-2"></i> Expand scene</button></div>
+      </div>
+      <div class="sim-recovery-review" id="sim-recovery-review" hidden>
+        <div class="sim-recovery-heading"><span class="kicker"><i data-lucide="life-buoy"></i> RECOVERY REVIEW</span><span id="sim-recovery-state" class="small" aria-live="polite">Loading return scene…</span></div>
+        <div class="seg sim-recovery-jumps" role="group" aria-label="Jump to a recovery stage and pause">
+          <button type="button" data-recovery="entry" aria-pressed="false" disabled><i data-lucide="flame"></i> Entry</button>
+          <button type="button" data-recovery="canopy" aria-pressed="false" disabled><i data-lucide="umbrella"></i> Parachute</button>
+          <button type="button" data-recovery="splash" aria-pressed="false" disabled><i data-lucide="waves"></i> Splashdown</button>
+          <button type="button" data-recovery="recovered" aria-pressed="false" disabled><i data-lucide="ship"></i> Recovered</button>
+        </div>
+        <p class="small sim-recovery-help" id="sim-recovery-help">Jump to a modelled return stage. Playback pauses for inspection.</p>
+      </div>
+      <div class="sim-caption" id="sim-caption"></div>
+      <div class="sim-view" id="sim-view"></div>
+      <div class="sim-3dw" id="sim-3dw" hidden><canvas id="sim-3dc" aria-label="3-D launch and return"></canvas><div class="sim-hud" id="d-hud"></div><div class="sim-3dnote" id="d-note"></div></div>
+    </div>
+    <details class="lab-disclosure sim-detail"><summary><i data-lucide="clipboard-list"></i> Experiment protocol <span>Sequence & progress</span></summary><div class="sim-proto" id="sim-proto"></div></details>
+    <details class="lab-disclosure sim-detail"><summary><i data-lucide="chart-no-axes-combined"></i> Science telemetry <span>Temperature, radiation & data</span></summary><div class="sim-charts" id="sim-charts"></div></details>
+  </div>
+  <aside class="sim-side" aria-label="Mission inspector">
+    <div class="sim-inspector-title"><p class="kicker">MISSION INSPECTOR</p><i data-lucide="panel-right"></i></div>
+    <div class="seg sim-inspector-tabs" role="tablist" aria-label="Mission inspector">
+      <button type="button" id="inspector-telemetry" role="tab" aria-selected="true" aria-controls="panel-telemetry" class="on" data-panel="telemetry"><i data-lucide="activity"></i> State</button>
+      <button type="button" id="inspector-cad" role="tab" aria-selected="false" aria-controls="panel-cad" tabindex="-1" data-panel="cad"><i data-lucide="box"></i> CAD</button>
+      <button type="button" id="inspector-events" role="tab" aria-selected="false" aria-controls="panel-events" tabindex="-1" data-panel="events"><i data-lucide="list"></i> Events</button>
+    </div>
+    <div class="card inspector-panel" id="panel-telemetry" role="tabpanel" aria-labelledby="inspector-telemetry"><h3>Spacecraft state</h3><table class="tbl sim-tm" id="sim-tm"></table></div>
+    <div class="card sim-3d inspector-panel" id="panel-cad" role="tabpanel" aria-labelledby="inspector-cad" hidden><h3 id="sim-3d-h">Spacecraft in CAD</h3><div class="cad-view" data-views="[]"></div></div>
+    <div class="card inspector-panel" id="panel-events" role="tabpanel" aria-labelledby="inspector-events" hidden><h3>Command & event log</h3><p class="small">Sentinel checks every command.</p><ol class="sim-log" id="sim-log"></ol></div>
+  </aside>
+</div>
+<section class="sim-report" id="sim-report" hidden></section>
+<noscript><p>The mission simulation needs JavaScript.</p></noscript>
+
+</main>
+
+<script src="../static/vendor/three.min.js?v=presentation-20261004"></script><script src="../static/vendor/GLTFLoader.js?v=presentation-20261004"></script><script src="../static/vendor/OrbitControls.js?v=presentation-20261004"></script><script src="cad.js?v=presentation-20261004"></script>
+<footer class="foot"><div class="wrap">
+<p><b>LELP-1 is in design.</b> Bay limits, budgets, timelines and environment numbers come from Space Philic's digital twin of the
+mission; each number on the satellite page says whether it comes from a team document, the twin's own design, or an estimate.
+Module masses in the experiment pages are our estimates. Results of earlier flights are summarised from the cited publications;
+each entry was researched and then fact-checked against its sources in a second, independent pass (October 2026).</p>
+<p class="mono">build recovery-20261004-r4</p>
+</div></footer>
+<script src="plan.js?v=presentation-20261004"></script>
+<script src="sim.js?v=presentation-20261004"></script>
+<script src="simulate.js?v=presentation-20261004"></script>
+</body>
+</html>

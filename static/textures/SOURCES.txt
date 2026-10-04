@@ -1,0 +1,24 @@
+Earth textures already used by this project, now served locally for reliability.
+Source: three.js r128 examples/textures/planets/
+https://github.com/mrdoob/three.js/tree/r128/examples/textures/planets
+earth_atmos_2048.jpg
+earth_specular_2048.jpg
+
+Additional rendering detail, verified against the official r128 repository API:
+earth_atmos_4096.jpg (actual decoded dimensions: 2048 x 1024; upstream filename is misleading)
+earth_clouds_1024.png (1024 x 512 indexed cloud texture with transparency)
+earth_normal_2048.jpg (2048 x 1024 tangent-space surface normals)
+
+Download base: https://raw.githubusercontent.com/mrdoob/three.js/r128/examples/textures/planets/
+Cloud imagery is a static artistic reference and does not represent live weather.
+The close-up ops scene uses an illustrative Earth orientation; geographic tracking is labelled schematic in the globe workspace.
+
+PRIMARY EARTH SURFACE (scene + globe): earth-blue-marble.jpg
+NASA Earth Observatory, Blue Marble: Next Generation, base map with topography and bathymetry.
+July 2004 monthly composite. Static reference imagery, not current weather or live terrain.
+Official page (5400 x 2700 JPEG link under July):
+https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography-bathymetry/
+Observed official download URL:
+https://assets.science.nasa.gov/content/dam/science/esd/eo/images/bmng/bmng-topography-bathymetry/july/world.topo.bathy.200407.3x5400x2700.jpg
+Downloaded and decoded 2026-10-04: 5400 x 2700 pixels, 2,308,798 bytes.
+Stored without image modification. Three.js supplementary cloud/specular/normal maps remain in use.

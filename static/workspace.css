@@ -1,0 +1,38 @@
+/* Shared navigation and appearance. Lucide icons are bundled locally. */
+:root {
+  --ws-rail:88px; --ws-bg:#f6f8ff; --ws-surface:#ffffff;
+  --ws-line:#dce3f0; --ws-accent:#465ce7; --ws-text:#17263c; --ws-muted:#61728b;
+  --ws-hover:#edf1fc; --ws-active:#e8edff; --ws-active-text:#3449cd;
+  --ws-glass:rgba(255,255,255,.88); --ws-shadow:0 18px 50px rgba(46,65,112,.12);
+  --ws-ease:cubic-bezier(.2,.8,.2,1);
+}
+html[data-theme="dark"] {
+  --ws-bg:#101b30; --ws-surface:#17243b; --ws-line:#2c3b56; --ws-accent:#99adff;
+  --ws-text:#edf2ff; --ws-muted:#a6b6d0; --ws-hover:#20304c;
+  --ws-active:#293b65; --ws-active-text:#c8d4ff; --ws-glass:rgba(19,31,52,.93);
+  --ws-shadow:0 18px 50px rgba(0,8,25,.3);
+}
+body[data-workspace]{padding-left:var(--ws-rail);box-sizing:border-box}
+.ws-rail{position:fixed;inset:0 auto 0 0;width:var(--ws-rail);z-index:90;background:var(--ws-glass);backdrop-filter:blur(20px);border-right:1px solid var(--ws-line);display:flex;align-items:center;flex-direction:column;padding:18px 8px 12px;gap:17px;font-family:Inter,system-ui,sans-serif;color:var(--ws-text);box-shadow:4px 0 22px rgba(50,65,105,.025)}
+.ws-wordmark{font-size:8px;line-height:1.5;letter-spacing:.16em;text-align:center;font-weight:700;color:var(--ws-text)}
+@media(min-width:721px){.ws-rail{overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}.ws-rail>*{flex-shrink:0}}
+.ws-brand-symbol{display:grid;place-items:center;margin:0 auto 8px;width:31px;height:31px;border-radius:10px;background:linear-gradient(140deg,#526ced,#7c80eb);box-shadow:0 4px 12px #465ce726;color:white}.ws-brand-symbol .lucide{width:21px;height:21px;stroke-width:1.5}
+.ws-rail nav{display:flex;flex-direction:column;width:100%;gap:5px}
+.ws-link,.ws-help,.ws-theme{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-height:54px;padding:9px 3px;border:1px solid transparent;border-radius:12px;background:none;color:var(--ws-muted);text-decoration:none;font:500 10px/1.2 Inter,system-ui,sans-serif;letter-spacing:0;cursor:pointer;transition:background .18s var(--ws-ease),color .18s var(--ws-ease),border-color .18s var(--ws-ease),box-shadow .18s var(--ws-ease)}
+.ws-link:hover,.ws-help:hover,.ws-theme:hover{background:var(--ws-hover);color:var(--ws-text);text-decoration:none}
+.ws-link[aria-current=page]{background:linear-gradient(145deg,var(--ws-active),var(--ws-hover));border-color:var(--ws-line);color:var(--ws-active-text);box-shadow:0 3px 9px #465ce708}
+.ws-link svg,.ws-help svg,.ws-theme svg{width:20px;height:20px;stroke-width:1.65}
+.ws-bottom{margin-top:auto;width:100%;display:grid;gap:2px}.ws-help,.ws-theme{width:100%;min-height:48px}.ws-theme{border-color:var(--ws-line);background:var(--ws-surface);color:var(--ws-text)}
+.ws-local{text-align:center;font:8px/1.5 ui-monospace,monospace;color:var(--ws-muted);margin-top:8px;letter-spacing:.04em}
+.ws-skip{position:fixed;left:100px;top:-100px;z-index:150;background:var(--ws-accent);color:var(--ws-surface);border-radius:8px;padding:12px;font:600 13px Inter,system-ui;text-decoration:none}.ws-skip:focus{top:12px}
+.ws-rail :focus-visible,.ws-dialog :focus-visible{outline:2px solid var(--ws-accent);outline-offset:3px}
+.lucide{display:inline-block;width:18px;height:18px;vertical-align:middle;flex-shrink:0;stroke-width:1.7}
+button .lucide,a .lucide{pointer-events:none}
+.ws-dialog{width:min(640px,calc(100vw - 32px));max-height:85vh;padding:30px;border:1px solid var(--ws-line);border-radius:22px;background:var(--ws-surface);color:var(--ws-text);box-shadow:var(--ws-shadow);font:14px/1.65 Inter,system-ui,sans-serif;overflow:auto}
+.ws-dialog::backdrop{background:rgba(20,34,63,.4);backdrop-filter:blur(7px)}
+.ws-dialog h2{font-size:25px;letter-spacing:-.04em;margin:0 0 10px;color:var(--ws-text)}.ws-dialog p{color:var(--ws-muted);margin:0 0 16px}.ws-dialog header{display:flex;align-items:start;justify-content:space-between;gap:20px}.ws-close{width:36px;height:36px;display:grid;place-items:center;border:1px solid var(--ws-line);border-radius:10px;background:var(--ws-hover);color:var(--ws-text);cursor:pointer;flex-shrink:0}.ws-guide{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.ws-guide div{padding:16px;border:1px solid var(--ws-line);border-radius:13px;background:var(--ws-bg)}.ws-guide strong{display:block;margin-bottom:5px;color:var(--ws-accent)}.ws-guide span{color:var(--ws-muted);font-size:13px}.ws-dialog kbd{font:12px ui-monospace,monospace;border:1px solid var(--ws-line);background:var(--ws-hover);padding:3px 6px;border-radius:4px}.ws-dialog .ws-footnote{font-size:12px;color:var(--ws-muted);border-top:1px solid var(--ws-line);padding-top:16px;margin:16px 0 0}
+@media(max-height:760px) and (min-width:721px){.ws-rail{gap:9px;padding-top:12px}.ws-link{min-height:46px;gap:5px;padding:6px 3px}.ws-brand-symbol{margin-bottom:5px}.ws-help,.ws-theme{min-height:43px}}
+@media(max-width:1100px){:root{--ws-rail:68px}.ws-rail{padding-left:5px;padding-right:5px;gap:12px}.ws-link,.ws-help,.ws-theme{font-size:9px}.ws-wordmark{font-size:8px;letter-spacing:.1em}}
+@media(max-width:720px){body[data-workspace]{padding-left:0;padding-bottom:74px}.ws-rail{inset:auto 0 0;width:100%;height:70px;padding:4px 4px max(4px,env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--ws-line);flex-direction:row;gap:3px}.ws-wordmark,.ws-help,.ws-local{display:none}.ws-bottom{display:block;margin:0;width:44px;flex:0 0 44px}.ws-theme{height:54px;min-height:54px;font-size:8px;padding:6px 2px;border-radius:9px;gap:5px}.ws-rail nav{flex-direction:row;gap:1px;height:100%;min-width:0;flex:1;overflow-x:auto;scrollbar-width:none}.ws-link{flex:1;min-width:40px;min-height:54px;padding:6px 2px;gap:5px;font-size:8px;border-radius:9px}.ws-link svg,.ws-theme svg{width:18px;height:18px}.ws-guide{grid-template-columns:1fr}.ws-skip{left:12px}.ws-dialog{padding:20px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+@media print{.ws-rail,.ws-skip{display:none!important}body[data-workspace]{padding:0!important}}

@@ -1,0 +1,9 @@
+{
+  "build": "presentation-20261004",
+  "packaged_at": "2026-10-04T09:50:11Z",
+  "source_kind": "local static export",
+  "source_git_sha": null,
+  "source_snapshot_sha256": "eead9d8259c1bb73ec34aa5ddf0a5903bfc1862d8f27da61cf6d35fe16ecefd9",
+  "purpose": "Illustrative research presentation and interface review",
+  "publication_scope": "Static build artifacts only"
+}
