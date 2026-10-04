@@ -1065,3 +1065,72 @@ html[data-theme="dark"] .xcard { --research-label: var(--research-accent); }
   .xcard { background: #fff; color: #4c4f69; }
   html[data-theme] .xcard .f, .xcard h3, .xcard p { color: #4c4f69; }
 }
+
+/* Dark workspace: neutral instruments with restrained selection accents. */
+@media screen {
+  html[data-theme="dark"] {
+    --lab-primary-ink: var(--ws-primary-ink); --tool-button-ink: var(--ws-primary-ink);
+    --lab-primary-hover: #314052; --tool-play-hover: #314052; --tool-config-hover: #314052;
+    --tool-config: var(--ctp-blue); --tool-play: var(--ctp-blue); --tool-spacecraft: var(--ctp-blue);
+    --tool-science: var(--ctp-teal); --tool-payload: var(--ctp-blue); --tool-sim: var(--ctp-blue);
+    --lab-gradient-a: transparent; --lab-gradient-b: transparent;
+    --lab-shadow: none; --lab-shadow-hover: none;
+  }
+  html[data-theme="dark"] body[data-workspace="lab"] { background: var(--bg); }
+  html[data-theme="dark"] .btn,
+  html[data-theme="dark"] .cfg-nav #cfg-next,
+  html[data-theme="dark"] #sim-play,
+  html[data-theme="dark"] #sim-scene-play,
+  html[data-theme="dark"] .cfg-sum a.btn[href^="simulate"],
+  html[data-theme="dark"] .sim-cta > .btn { box-shadow: none; }
+  html[data-theme="dark"] .start a,
+  html[data-theme="dark"] .cfg-sum,
+  html[data-theme="dark"] .loaded,
+  html[data-theme="dark"] .sim-cta { background: var(--ctp-base); }
+  html[data-theme="dark"] .xcard {
+    --research-accent: var(--ctp-blue); --research-label: var(--ctp-subtext1); --research-line: var(--line);
+    background: var(--ctp-base); border-color: var(--line);
+  }
+  html[data-theme="dark"] .xcard:hover { background: var(--lab-soft-hover); border-color: var(--ctp-overlay0); }
+  html[data-theme="dark"] .xcard.pick.on { background: color-mix(in srgb, var(--ctp-teal) 6%, var(--ctp-base)); border-color: var(--ctp-teal); box-shadow: 0 0 0 1px var(--ctp-teal); }
+  html[data-theme="dark"] .xcard .exp-icon,
+  html[data-theme="dark"] .cfg-steps li:not(.on) b,
+  html[data-theme="dark"] .section-icon { background: var(--ctp-mantle); color: var(--ctp-subtext1); border-color: var(--line); }
+  html[data-theme="dark"] .kicker .lucide,
+  html[data-theme="dark"] .summary-platform .lucide,
+  html[data-theme="dark"] .mode-top > .lucide,
+  html[data-theme="dark"] .lab-disclosure > summary > .lucide,
+  html[data-theme="dark"] .preparation-brief .lucide,
+  html[data-theme="dark"] .guide-h .lucide,
+  html[data-theme="dark"] .sim-detail .lucide,
+  html[data-theme="dark"] #sim-tabs button:not(.on) .lucide,
+  html[data-theme="dark"] .sim-inspector-tabs button:not(.on) .lucide,
+  html[data-theme="dark"] .sim-recovery-jumps button:not(.on) .lucide { color: var(--ctp-subtext1); }
+  html[data-theme="dark"] .xcard.pick.on .exp-icon,
+  html[data-theme="dark"] .xcard.pick.on .exp-card-top .n { color: var(--ctp-teal); }
+  html[data-theme="dark"] body[data-workspace="lab"][data-lab-page="index"] #experiments .xcard .n { background: var(--ctp-mantle); color: var(--ctp-subtext1); border-color: var(--line); }
+  html[data-theme="dark"] body[data-workspace="lab"][data-lab-page="index"] #experiments .xcard::after { background: var(--ctp-subtext1); }
+  html[data-theme="dark"] .r-sample,
+  html[data-theme="dark"] .r-imaging { background: #263343 !important; color: var(--ws-primary-ink) !important; }
+  html[data-theme="dark"] .satdraw .bub circle { fill: #263343; }
+  html[data-theme="dark"] .satdraw .bub text { fill: var(--ws-primary-ink); }
+}
+
+@media screen {
+  html[data-theme="dark"] .btn:not(.ghost),
+  html[data-theme="dark"] .mode.on .mode-check,
+  html[data-theme="dark"] .cfg-steps li.on b,
+  html[data-theme="dark"] .guide li::before { background: #243448; color: var(--ws-primary-ink); }
+  html[data-theme="dark"] .btn:not(.ghost):hover { background: #314052; color: var(--ws-primary-ink); }
+}
+
+/* Dark filled controls retain legible labels on restrained slate surfaces. */
+@media screen {
+  html[data-theme="dark"] .btn:not(.ghost),
+  html[data-theme="dark"] .btn:not(.ghost):hover,
+  html[data-theme="dark"] .guide li::before,
+  html[data-theme="dark"] .mode.on .mode-check,
+  html[data-theme="dark"] .cfg-steps li.on b {
+    background: #263343; color: #e9eef4;
+  }
+}

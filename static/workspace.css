@@ -55,22 +55,27 @@ html[data-theme="dark"] {
   --ctp-teal:var(--ctp-mocha-teal);
   --ctp-sky:var(--ctp-mocha-sky);
   --ctp-sapphire:var(--ctp-mocha-sapphire);
-  --ctp-blue:var(--ctp-mocha-blue);
+  --ctp-blue:#79a7db;
   --ctp-lavender:var(--ctp-mocha-lavender);
-  --ctp-text:var(--ctp-mocha-text);
-  --ctp-subtext1:var(--ctp-mocha-subtext1);
-  --ctp-subtext0:var(--ctp-mocha-subtext0);
-  --ctp-overlay2:var(--ctp-mocha-overlay2);
-  --ctp-overlay1:var(--ctp-mocha-overlay1);
-  --ctp-overlay0:var(--ctp-mocha-overlay0);
-  --ctp-surface2:var(--ctp-mocha-surface2);
-  --ctp-surface1:var(--ctp-mocha-surface1);
-  --ctp-surface0:var(--ctp-mocha-surface0);
-  --ctp-base:var(--ctp-mocha-base);
-  --ctp-mantle:var(--ctp-mocha-mantle);
-  --ctp-crust:var(--ctp-mocha-crust);
-  --ws-muted:var(--ctp-subtext0); --ws-primary-ink:var(--ctp-crust);
+  --ctp-text:#e6ebf1;
+  --ctp-subtext1:#bdc6d0;
+  --ctp-subtext0:#97a2af;
+  --ctp-overlay2:#a0acb8;
+  --ctp-overlay1:#8693a1;
+  --ctp-overlay0:#707d8b;
+  --ctp-surface2:#58636f;
+  --ctp-surface1:#3d4651;
+  --ctp-surface0:#292f37;
+  --ctp-base:#191d22;
+  --ctp-mantle:#111418;
+  --ctp-crust:#0c0f12;
+  --ws-muted:var(--ctp-subtext0); --ws-primary-ink:#e9eef4;
   --ws-shadow:0 18px 50px color-mix(in srgb,var(--ctp-crust) 36%,transparent);
+
+  --ws-accent:var(--ctp-blue); --ws-hover:#22282f; --ws-active:#243448; --ws-active-text:#e9eef4;
+  --ws-glass:var(--ctp-mantle); --ws-shadow:none;
+  --gradient-mission:#243448; --gradient-configure:#243448; --gradient-simulate:#243448;
+  --gradient-research:#243448; --gradient-spacecraft:#243448; --gradient-payload:#243448; --gradient-earth:#243448;
 }
 body[data-workspace]{padding-left:var(--ws-rail);box-sizing:border-box}
 .ws-rail{position:fixed;inset:0 auto 0 0;width:var(--ws-rail);z-index:90;background:var(--ws-glass);backdrop-filter:blur(20px);border-right:1px solid var(--ws-line);display:flex;align-items:center;flex-direction:column;padding:18px 8px 12px;gap:17px;font-family:Inter,system-ui,sans-serif;color:var(--ws-text);box-shadow:4px 0 22px rgba(50,65,105,.025)}
@@ -178,3 +183,23 @@ html[data-theme] .ws-intro-logo .ws-logo-lockup img{filter:none;mix-blend-mode:s
 @media(max-width:720px){.ws-logo-lockup{width:140px;height:44px}body[data-workspace] #topbar .brand-sub{font-size:7px;line-height:10px}.globe-heading .ws-header-brand{margin-bottom:12px}body[data-workspace="globe"] #globe-details{top:220px}body[data-workspace="globe"] .cesium-viewer-toolbar{top:274px}.ws-intro-skip{right:20px;bottom:24px}.ws-intro-caption{font-size:9px;letter-spacing:.24em}}
 @media(prefers-reduced-motion:reduce){.ws-brand-intro{transition:none}.ws-intro-logo,.ws-intro-caption,.ws-intro-stars,.ws-intro-orbit{animation:none}}
 @media print{.ws-brand-intro{display:none!important}body[data-workspace="lab"][data-lab-page] > .top{display:none}}
+
+/* Restrained dark chrome; light presentation and layout stay unchanged. */
+html[data-theme="dark"] .ws-link:not([aria-current="page"]) svg,
+html[data-theme="dark"] .ws-help svg,
+html[data-theme="dark"] .ws-theme svg { color:var(--ws-muted); }
+html[data-theme="dark"] .ws-link:hover { background:#22282f;border-color:var(--ctp-surface1);color:var(--ctp-text); }
+html[data-theme="dark"] .ws-link:focus-visible { outline-color:var(--ctp-blue); }
+html[data-theme="dark"] .ws-link[aria-current="page"],
+html[data-theme="dark"] .ws-link[aria-current="page"]:hover { background:#243448;color:#e9eef4;border-color:#446488;box-shadow:inset 2px 0 0 var(--ctp-blue);filter:none; }
+html[data-theme="dark"] .ws-link[aria-current="page"] svg,
+html[data-theme="dark"] .ws-link:focus-visible svg { color:var(--ctp-blue); }
+html[data-theme="dark"] .ws-brand-intro { background:radial-gradient(ellipse at 50% 45%,#22282f,var(--ctp-mantle) 48%,var(--ctp-crust)); }
+html[data-theme="dark"] .ws-brand-intro::backdrop { background:var(--ctp-crust); }
+html[data-theme="dark"] .ws-intro-caption { color:var(--ctp-subtext1); }
+html[data-theme="dark"] .ws-intro-orbit { border-color:#435465; }
+html[data-theme="dark"] .ws-intro-orbit::after { border-color:#29333e; }
+html[data-theme="dark"] .ws-intro-orbit i { background:var(--ctp-blue);box-shadow:none; }
+html[data-theme="dark"] .ws-intro-skip { background:#22282f;color:var(--ctp-text);border-color:var(--ctp-surface2); }
+html[data-theme="dark"] .ws-intro-skip:hover { background:#29333e;border-color:var(--ctp-blue); }
+html[data-theme="dark"] .ws-intro-skip:focus-visible { outline-color:var(--ctp-blue); }

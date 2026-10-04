@@ -618,9 +618,12 @@ html[data-theme="dark"] {
   --good:var(--ctp-green); --good-ink:var(--ctp-green); --warn:var(--ctp-yellow); --warn-ink:var(--ctp-yellow);
   --serious:var(--ctp-peach); --crit:var(--ctp-red); --crit-ink:var(--ctp-red); --info-ink:var(--ctp-blue);
   --theme-hover:var(--ctp-surface0); --theme-primary-ink:var(--ws-primary-ink);
-  --theme-shadow:0 10px 35px color-mix(in srgb,var(--ctp-crust) 25%,transparent),0 1px 3px color-mix(in srgb,var(--ctp-crust) 18%,transparent);
-  --theme-page:radial-gradient(ellipse at 90% 0%,color-mix(in srgb,var(--ctp-mauve) 5%,transparent),transparent 48%),linear-gradient(135deg,var(--ctp-base),var(--ctp-mantle));
+  --theme-shadow:none;
+  --theme-page:var(--ctp-mantle);
   --plot-1:var(--ctp-blue); --plot-2:var(--ctp-teal); --plot-3:var(--ctp-mauve); --plot-4:var(--ctp-green); --plot-5:var(--ctp-maroon); --plot-6:var(--ctp-sapphire);
+
+  --theme-primary-shadow:none; --theme-selected:#222e3a; --theme-selected-line:#466383;
+  --theme-topbar:var(--ctp-base); --theme-stage:var(--ctp-mantle); --theme-stage-frame:var(--ctp-surface0);
 }
 html[data-theme] body[data-workspace="console"],html[data-theme] body[data-workspace="customer"] {background:var(--theme-page);background-attachment:fixed;color:var(--ink);}
 html[data-theme] body[data-workspace] #topbar {background:var(--theme-topbar);backdrop-filter:blur(18px);border-color:var(--line);}
@@ -767,3 +770,17 @@ html[data-theme] body[data-workspace="console"] #panel-platform .section-icon{co
 html[data-theme] body[data-workspace="console"] #panel-sentinel .section-icon{color:var(--accent-research)}
 html[data-theme] body[data-workspace="console"] #panel-feed .section-icon{color:var(--accent-configure)}
 html[data-theme] body[data-workspace] .transport .btn.primary,html[data-theme] body[data-workspace] .transport .btn.primary:not(:disabled):hover{background:var(--gradient-mission);color:var(--theme-primary-ink);border-color:rgba(255,255,255,.14);box-shadow:var(--theme-primary-shadow)}
+
+/* Dark-only control hierarchy: neutral default glyphs, blue active states. */
+html[data-theme="dark"] body[data-workspace] .focus-tabs button:not(.on) svg,
+html[data-theme="dark"] body[data-workspace] #main .panel .section-icon { color:var(--ink-3); }
+html[data-theme="dark"] body[data-workspace] .focus-tabs button:not(.on):hover { background:#22282f;color:var(--ink);border-color:var(--line-2); }
+html[data-theme="dark"] body[data-workspace] .focus-tabs button.on,
+html[data-theme="dark"] body[data-workspace] .focus-tabs button.on:hover { background:#243448;color:#e9eef4;border-color:#446488;box-shadow:inset 0 -2px 0 var(--ctp-blue);filter:none; }
+html[data-theme="dark"] body[data-workspace] .focus-tabs button.on svg,
+html[data-theme="dark"] body[data-workspace] .focus-tabs button:focus-visible svg { color:var(--ctp-blue); }
+html[data-theme="dark"] body[data-workspace] .btn.primary,
+html[data-theme="dark"] body[data-workspace] .btn.primary:not(:disabled):hover,
+html[data-theme="dark"] body[data-workspace] .transport .btn.primary,
+html[data-theme="dark"] body[data-workspace] .transport .btn.primary:not(:disabled):hover { background:#243448;color:#e9eef4;border-color:#446488;box-shadow:none;filter:none; }
+html[data-theme="dark"] body[data-workspace] .panel-h { background:var(--surface); }

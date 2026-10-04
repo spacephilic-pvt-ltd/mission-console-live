@@ -1,9 +1,9 @@
 {
-  "build": "catppuccin-20261004-r9",
-  "built_at": "2026-10-04T13:05:20Z",
+  "build": "charcoal-20261004-r10",
+  "built_at": "2026-10-04T13:38:29Z",
   "sha": null,
   "source_git_sha": null,
   "source_kind": "local working-tree static export",
   "publication_scope": "Static build artifacts only",
-  "content_snapshot_sha256": "7d9b75d0237a674b74bb6cd3e3843d0daae7f70859a78caaf864fe9157708188"
+  "content_snapshot_sha256": "7b0232b5699892877b50c5547c3b47341ff728d2a02773522e0a6147dc53e9fc"
 }
