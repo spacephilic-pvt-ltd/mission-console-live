@@ -1,9 +1,9 @@
 {
-  "build": "brand-20261004-r6",
-  "built_at": "2026-10-04T11:49:43Z",
+  "build": "brand-20261004-r7",
+  "built_at": "2026-10-04T12:03:56Z",
   "sha": null,
   "source_git_sha": null,
   "source_kind": "local working-tree static export",
-  "content_snapshot_sha256": "69577d76f610f496d13b6d9e31e122b934598ce946c9670f6a44f8031187088b",
+  "content_snapshot_sha256": "6f7408f19a2df404a391633decad1af11a9cae3e672a81d5690053784b08086b",
   "publication_scope": "Static build artifacts only"
 }
