@@ -418,6 +418,8 @@
         grp.userData = { canopy, lines }; grp.visible = false; cap.add(grp); return grp;
       };
       this.rMain = chute(4.5, 14, '#ff7a1a', '#f4f4f4', 2.04);              // 9 m ringsail on a 14 m riser
+      this.rMain.userData.restCanopyY = this.rMain.userData.canopy.position.y;
+      this._returnFromOffset = new THREE.Vector3(); this._returnTargetOffset = new THREE.Vector3(); this._returnLastT = null;
       cap.scale.setScalar(0.04);                                             // 40x, like the booster
       // Use the existing generated entry CAD when available. Keep the lightweight silhouette only
       // as a loading/failure fallback; all recovery positions still come from the same mission model.
@@ -498,7 +500,7 @@
       const y = yAxis.clone().normalize(), x = xAxis.clone().sub(y.clone().multiplyScalar(xAxis.dot(y))).normalize(), z = new THREE.Vector3().crossVectors(x, y);
       obj.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, z));
     }
-    updateReturn(c, dt = 1 / 60) {
+    updateReturn(c, dt = 1 / 60, ctx = {}) {
       /* c: capsule state at the replay time (replay.js capsuleAt): alt_km, speed_ms, x_km (along the launch azimuth line),
          fpa_deg, heat_kw_m2, phase, t and the key times tDrogue / tMain / tSplash / tRecovery, splashKm, shipKm, shipMs. */
       this._loadReturnCad();
@@ -532,20 +534,37 @@
       // Pick up outside the hull, clear the rail, swing inboard, then lower onto deck.
       // The manoeuvre illustrates the model's existing arrival-to-recovery interval.
       if (hoisting) pos = sz.pos.clone().add(sz.fwd.clone().multiplyScalar(.28 * swing))
-        .add(sz.up.clone().multiplyScalar(hoist < .4 ? lerp(-.009, .55, lift) : lerp(.55, this.shipDeckKm + .012, lower)));
-      if (aboard) pos = this.ship.position.clone().add(sz.side.clone().multiplyScalar(0.56)).add(sz.up.clone().multiplyScalar(this.shipDeckKm + 0.012)).add(sz.fwd.clone().multiplyScalar(-0.12));   // on deck under the crane
+        .add(sz.up.clone().multiplyScalar(hoist < .4 ? lerp(-.009, .55, lift) : lerp(.55, this.shipDeckKm + .0005, lower)));
+      if (aboard) pos = this.ship.position.clone().add(sz.side.clone().multiplyScalar(0.56)).add(sz.up.clone().multiplyScalar(this.shipDeckKm + .0005)).add(sz.fwd.clone().multiplyScalar(-0.12));   // 12.5 mm contact clearance at 40x display scale
       this.rcap.position.copy(pos); this.rcap.quaternion.setFromUnitVectors(V(0, 1, 0), aft);
       const heat = Math.min(c.heat_kw_m2 / 600, 1), fl = 1 + Math.sin(motionTime * 31) * .08;
       this.rPlasma.visible = this.rWake.visible = heat > .01;
       this.rPlasma.material.opacity = .9 * heat; this.rPlasma.scale.set(fl, .32 * fl, fl);
       this.rWake.material.opacity = .45 * heat; this.rWake.scale.set(1, .5 + .7 * heat, 1);
-      const fill = (chute, f) => { const { canopy, lines } = chute.userData; canopy.scale.set(.15 + .85 * f, .55 + .45 * f, .15 + .85 * f); lines.scale.set(.15 + .85 * f, 1, .15 + .85 * f); };
-      this.rMain.visible = c.phase === 'main'; if (this.rMain.visible) fill(this.rMain, sstep((c.t - c.tMain) / 6.0));
-      const ts = c.t - c.tSplash; this.rSplash.visible = ts > 0 && ts < 25;
+      const { canopy, lines, restCanopyY } = this.rMain.userData;
+      const ts = c.t - c.tSplash, collapse = sstep(ts / 18);
+      this.rMain.visible = c.phase === 'main' || floating;
+      if (c.phase === 'main') {
+        // Model drag area fills linearly in six seconds: radius therefore follows sqrt(fill).
+        const fillSeconds = Number.isFinite(c.mainFill) && c.mainFill > 0 ? c.mainFill : 6;
+        const f = Math.max(0, Math.min(1, (c.t - c.tMain) / fillSeconds)), radial = Math.max(.015, Math.sqrt(f)), vertical = .3 + .7 * f;
+        this.rMain.position.set(0, 2.04, 0); canopy.position.y = restCanopyY;
+        canopy.scale.set(radial, vertical, radial); lines.visible = true;
+        lines.scale.set(radial, (restCanopyY + 4.5 * Math.cos(Math.PI * .42) * vertical) / 14, radial);
+      } else if (floating) {
+        // A schematic canopy release/collapse, anchored to splashdown. Move the existing fabric
+        // continuously to its resting position; the folded cloth no longer teleports into view.
+        const anchor = sz.pos.clone().addScaledVector(sz.side, .35 * collapse).addScaledVector(sz.fwd, .16 * collapse)
+          .addScaledVector(sz.up, lerp(.0816, .0015, collapse));
+        this.rcap.updateMatrixWorld(true); this.rMain.position.copy(this.rcap.worldToLocal(anchor));
+        canopy.position.y = restCanopyY * (1 - collapse); canopy.scale.set(1, lerp(1, .015, collapse), lerp(1, .6, collapse));
+        lines.visible = ts < 5; lines.scale.set(1, Math.max(.01, 1 - collapse), lerp(1, .6, collapse));
+      }
+      this.rSplash.visible = ts > 0 && ts < 25;
       if (this.rSplash.visible) { this.rSplash.scale.setScalar(0.04 * (1 + ts * 0.45)); this.rSplash.material.opacity = .65 * (1 - ts / 25); this.rSplash.position.set(0, 0.004, 0); }
       const afloat = floating && !aboard;
       this.rDye.visible = afloat; if (afloat) { const d = sstep(ts / 90); this.rDye.scale.setScalar(0.04 + 0.14 * d); this.rDye.material.opacity = .3 * d; }
-      this.rFloat.visible = floating;
+      this.rFloat.visible = false; // the actual canopy geometry now remains on the water after collapsing
       this.rBeacon.visible = floating && !aboard && Math.sin(motionTime * 6) > .6;
       this.recoveryCable.visible = hoisting;
       if (hoisting) {
@@ -574,9 +593,19 @@
         from = pos.clone().add(g.side.clone().multiplyScalar(.8)).add(aft.clone().multiplyScalar(.15)).add(g.up.clone().multiplyScalar(.1));
         at = pos.clone().add(aft.clone().multiplyScalar(.11));
       }
-      const minR = this.earthR + 0.03; if (from.length() < minR) from.setLength(minR);       // never below the sea
-      this.camPos.copy(from); this.camTarget.copy(at);
-      this.camera.position.copy(from); this.camera.up.copy(from.clone().normalize()); this.camera.lookAt(at);
+      const deltaT = this._returnLastT == null ? 0 : c.t - this._returnLastT;
+      const snap = ctx.snap || this.reducedMotion || this._returnLastT == null || this._returnLastAspect !== this.camera.aspect || deltaT < 0 || Math.abs(deltaT) > 120;
+      // Smooth camera offsets, never the physical capsule position: a world-space lag would
+      // leave a 7.9 km/s entry vehicle behind the camera. Explicit seeks remain exact.
+      const fromOffset = from.sub(pos), targetOffset = at.sub(pos);
+      const blend = snap ? 1 : deltaT === 0 ? 0 : 1 - Math.exp(-Math.min(Math.max(dt, 0), .15) * 5);
+      this._returnFromOffset.lerp(fromOffset, blend); this._returnTargetOffset.lerp(targetOffset, blend);
+      this.camPos.copy(pos).add(this._returnFromOffset); this.camTarget.copy(pos).add(this._returnTargetOffset);
+      const minR = this.earthR + .03; if (this.camPos.length() < minR) this.camPos.setLength(minR);
+      this._returnLastT = c.t;
+      this._returnLastAspect = this.camera.aspect;
+      this.camera.position.copy(this.camPos); this.camera.up.copy(this.camPos).normalize(); this.camera.lookAt(this.camTarget);
+      this.daySky.position.copy(this.camPos); this.daySky.material.uniforms.up.value.copy(this.camPos).normalize();
       this.renderer.render(this.scene, this.camera);
     }
     _loadCad() {
@@ -679,7 +708,7 @@
     _sky(alt) {
       const k = sstep(Math.max(alt, 0) / 90);
       this.scene.background.setRGB(.003, .006, .013);
-      this.daySky.visible = this.phase === 'launch' && alt < 90;
+      this.daySky.visible = (this.phase === 'launch' || (this.phase === 'return' && alt >= 12)) && alt < 90;
       this.daySky.material.uniforms.density.value = 1 - k;
       this.stars.material.opacity = .38 * sstep((alt - 90) / 55);
       this.stars.visible = alt > 90;
@@ -890,6 +919,23 @@
       const adapter = new THREE.Mesh(new THREE.CylinderGeometry(3.6, 4.8, 2.4, 8, 1, true), this._std(0xd8d8d2, { side: THREE.DoubleSide, wireframe: true })); adapter.position.y = -1.6; lelp.add(adapter);
       const stage = new THREE.Mesh(new THREE.CylinderGeometry(4.8, 4.8, 22, 32), this._std(0xe6e6e0, { roughness: .45, metalness: .25 })); stage.position.y = -14; lelp.add(stage);
       const nozzle = new THREE.Mesh(new THREE.ConeGeometry(2.2, 4, 24, 1, true), this._std(0x555a63, { side: THREE.DoubleSide, metalness: .8 })); nozzle.position.y = -27; nozzle.rotation.x = Math.PI; lelp.add(nozzle);
+      // The model supplies an impulsive velocity change, not a finite burn duration.
+      // This brief nozzle highlight and the annotated vectors are a schematic event cue.
+      this.deorbitPlume = flame(1.5, 11, 0x9dcbe5); this.deorbitPlume.position.y = -29; this.deorbitPlume.visible = false; lelp.add(this.deorbitPlume);
+      this.deorbitGuide = new THREE.Group(); this.deorbitGuide.name = 'Schematic retrograde impulse'; g.add(this.deorbitGuide); this.deorbitGuide.visible = false;
+      const velocity = new THREE.ArrowHelper(V(1, 0, 0), V(-17, 23, 0), 34, 0x8bc9e1, 3, 1.3);
+      const braking = new THREE.ArrowHelper(V(-1, 0, 0), V(17, -23, 0), 34, 0xe2ae65, 3, 1.3);
+      this.deorbitGuide.add(velocity, braking);
+      const label = (text, width, y, color) => {
+        const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 112; const context = canvas.getContext('2d');
+        context.fillStyle = 'rgba(8,20,32,.84)'; context.fillRect(0, 0, 1024, 112); context.fillStyle = color;
+        context.font = '500 36px Arial, sans-serif'; context.textAlign = 'center'; context.textBaseline = 'middle'; context.fillText(text, 512, 56);
+        const texture = new THREE.CanvasTexture(canvas); texture.encoding = THREE.sRGBEncoding;
+        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, depthTest: false, depthWrite: false })); sprite.position.y = y; sprite.scale.set(width, width * 112 / 1024, 1); this.deorbitGuide.add(sprite); return { context, texture };
+      };
+      label('ORBITAL MOTION  →', 35, 29, '#bce6f5'); label('←  RETROGRADE Δv', 35, -29, '#f6cf92');
+      this.deorbitCaption = label('SCHEMATIC IMPULSE', 54, -37, '#e3edf1'); this._deorbitDvLabel = null;
+      this._deorbitGuideMaterials = []; this.deorbitGuide.traverse(o => { if (o.material) { o.material.transparent = true; this._deorbitGuideMaterials.push(o.material); } });
       // whole-payload return: the inflatable heat shield is packed as a ring round the base of the stack, inside the 1.1 m
       // envelope (11.5 units per metre in this scene); after the stage separates it inflates to 2.6 m and the lab sits in its wake
       this.hiadMats = { skin: this._std(0xbdb3a2, { roughness: .85, metalness: .05, side: THREE.DoubleSide }), tori: this._std(0xd9b46a, { roughness: .7, metalness: .1 }),
@@ -918,7 +964,22 @@
       this.t += dt;
       this.scene.fog = null;
       this.scene.background.setRGB(.003, .006, .013); this.stars.material.opacity = .38; this.stars.visible = true; this.daySky.visible = false;
-      this.lelp.rotation.y += dt * (this.reducedMotion || ctx.cam === 'arm' ? 0 : .018);
+      const returnView = ctx.ret || {}, maneuverAge = Number.isFinite(returnView.tBurn) && Number.isFinite(returnView.t) ? returnView.t - returnView.tBurn : -Infinity;
+      const maneuver = maneuverAge >= -20;
+      if (maneuver) {
+        // In this illustrative ops frame +X denotes orbital motion. Body +Y/thrust points
+        // retrograde (−X); the stage nozzle and exhaust point prograde (+X).
+        this.lelp.rotation.set(0, 0, Math.PI * .5 * sstep((maneuverAge + 20) / 20));
+      } else { this.lelp.rotation.z = 0; this.lelp.rotation.y += dt * (this.reducedMotion || ctx.cam === 'arm' ? 0 : .018); }
+      this.deorbitGuide.visible = !!returnView.deorbitCue && !returnView.sep;
+      const cueOpacity = Math.max(0, Math.min(1, returnView.deorbitCue || 0)); this._deorbitGuideMaterials.forEach(material => { material.opacity = cueOpacity; });
+      this.deorbitPlume.visible = !!returnView.burnActive && !returnView.sep;
+      this.deorbitPlume.userData.outer.material.opacity = .38; this.deorbitPlume.userData.core.material.opacity = .62;
+      if (this.deorbitGuide.visible && returnView.deorbitDv !== this._deorbitDvLabel) {
+        this._deorbitDvLabel = returnView.deorbitDv;
+        const { context, texture } = this.deorbitCaption; context.clearRect(0, 0, 1024, 112); context.fillStyle = 'rgba(8,20,32,.84)'; context.fillRect(0, 0, 1024, 112);
+        context.fillStyle = '#e3edf1'; context.fillText(`SCHEMATIC IMPULSE · Δv ${Number.isFinite(returnView.deorbitDv) ? returnView.deorbitDv : '—'} m/s`, 512, 56); texture.needsUpdate = true;
+      }
       // the Earth turns with mission time (one orbit per 95.7 min), capped so fast-forwarded days read as a time-lapse
       this.earth.rotateOnAxis(V(0, 1, 0), Math.min(Math.max((ctx.dtm || 0) * 2 * Math.PI / 5740, 0), dt * .18));
       const p = frame.platform, R = THREE.MathUtils.degToRad;
@@ -988,7 +1049,11 @@
       // camera: slow orbit around LELP (console), close on the arm (customer view), pull back for the return; while
       // Dexter-L parks on the stage and for the first 20 s after separation, close on the arm, the post and the stage top
       const ret = rt.sep, sepA = rt.sep ? rt.sepAge : 0;
-      if (rt.armParked && sepA < 20) {
+      if (this.deorbitGuide.visible) {
+        const snap = ctx.snap || this._camSnap;
+        this.camPos.lerp(V(22, 10, 130), snap ? 1 : 1 - Math.exp(-Math.max(dt, 0) * 4));
+        this.camTarget.lerp(V(0, -3, 0), snap ? 1 : 1 - Math.exp(-Math.max(dt, 0) * 4));
+      } else if (rt.armParked && sepA < 20) {
         const pin = new THREE.Vector3(); this.grapplePin.getWorldPosition(pin);
         const out = pin.clone().setY(0).normalize(), side = new THREE.Vector3(-out.z, 0, out.x);
         const e = sstep(sepA / 20), ty = lerp(8, -7, e), d = lerp(52, 96, e), snap = ctx.snap || this._camSnap;
@@ -1029,8 +1094,9 @@
         this.sun.position.copy(site.pos).addScaledVector(this.sunDirection, 10); this.sun.target.position.copy(site.pos); this.sun.intensity = 1.35;
         this.skyFill.position.copy(site.up); this.skyFill.intensity = .42; this.rim.intensity = .45;
         this.rim.position.copy(site.pos).addScaledVector(site.up, 6).addScaledVector(site.side, -8); this.rim.target.position.copy(site.pos);
-        this.daySky.material.uniforms.sunDirection.value.copy(this.sunDirection);
       }
+      this.daySky.material.uniforms.sunDirection.value.copy(this.sunDirection);
+      this._returnLastT = null;
       const ret = p === 'return'; this.ret.visible = ret; [this.booster, this.upper, this.pad, this.barge, this.plume, this.cloud].forEach(o => { o.visible = !ret; });
       if (ret) return;
       if (p === 'ops') { this.camera.up.set(0, 1, 0); this.camPos.set(60, 20, 60); this.camTarget.set(0, 8, 0); this._camSnap = true; } else { const g = this._place(0, 0); this.camPos.copy(g.pos.clone().add(g.side.clone().multiplyScalar(1.4)).add(g.up.clone().multiplyScalar(.5))); this.camTarget.copy(g.pos); } }

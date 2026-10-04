@@ -55,9 +55,13 @@
     // whole-payload return (sentinel/lelp/reentry.py): key times and the window of the true-scale return shot
     const rm = M.reentry_meta || null;
     X.ret = (M.reentry || []).slice().sort((a, b) => a.t - b.t);
+    X.tBurn = rm ? (rm.t_deorbit ?? tOf('DEORBIT_BURN', Infinity)) : Infinity;
+    X.mainFill = rm ? (rm.main_fill_s ?? 6) : 6;
+    X.deorbitDv = rm ? (rm.deorbit_dv_ms ?? 150) : 0;
     X.tArmPark = rm && rm.t_arm_park ? rm.t_arm_park : Infinity; X.tSep = rm ? rm.t_stage_sep : Infinity; X.tInflate = rm ? rm.t_inflate : Infinity; X.inflateS = rm ? rm.inflate_s : 90;
     X.tEI = rm ? rm.t_entry_interface : Infinity; X.tMain = rm ? rm.t_main : Infinity;
     X.tSplash = rm ? rm.t_splash : Infinity; X.tRecovery = rm ? rm.t_recovery : Infinity; X.tPeak = tOf('PEAK_HEATING', Infinity);
+    X.tShipArrival = rm ? X.tSplash + rm.ship_offset_km * 1000 / Math.max(rm.ship_speed_ms, .001) : Infinity;
     X.retShot = rm && X.ret.length ? [X.tEI - 20, tEnd + 1] : null;     // to the end: once aboard the ship the lab never goes back to orbit
     X.atk = isFinite(X.tIntr);
     // multi-day mission (lab operations last as long as the experiments, sentinel/lelp/mission.py): day-0 setup, quiet days,
@@ -97,7 +101,10 @@
     for (const E of Object.values(X.exps)) { const m = E.meta, step = m.imaging.every_h * 3600 / m.protocol_x;  // imaging rounds, for the flash
       E.rounds = []; if (m.t_start != null && m.t_end != null) for (let tr = m.t_start; tr <= (m.t_preserved != null ? m.t_preserved : m.t_end) + 1; tr += step) E.rounds.push({ t: tr }); }
     // pacing changes playback must not skip at high speed: every slow window and director shot starts here
-    X.stops = [...X.slow.map((w) => w[0]), X.tArmPark - 5, X.tSep - 10, X.tInflate - 10, X.retShot ? X.retShot[0] : Infinity, tSetup, X.tAtk0 || Infinity]
+    X.stops = [...X.slow.map((w) => w[0]), X.tBurn - 5, X.tBurn, X.tBurn + 5,
+      X.tMain - 3, X.tMain, X.tMain + X.mainFill + 5, X.tSplash - 20, X.tSplash, X.tSplash + 10,
+      X.tShipArrival, X.tRecovery - 10, X.tRecovery, X.tRecovery + 10,
+      X.tArmPark - 5, X.tSep - 10, X.tInflate - 10, X.retShot ? X.retShot[0] : Infinity, tSetup, X.tAtk0 || Infinity]
       .filter((v) => isFinite(v)).sort((a, b) => a - b);
     // chart extents
     const ceilTo = (v, step) => Math.ceil(v / step) * step;
@@ -152,14 +159,24 @@
     const X = M.x, C = X.ret; if (!X.retShot || t < X.retShot[0] || t >= X.retShot[1]) return null;
     const i = lastBefore(C, t), a = C[Math.max(i, 0)], b = C[i + 1], rm = M.reentry_meta, o = {};
     if (!b || t >= X.tSplash) Object.assign(o, C[C.length - 1]);
-    else { const k = clamp((t - a.t) / (b.t - a.t), 0, 1); for (const f of RETNUM) o[f] = lerp(a[f], b[f], k); }
+    else { const k = clamp((t - a.t) / (b.t - a.t), 0, 1);
+      for (const f of RETNUM) {
+        // Water contact is a discontinuity: the floating sample's zero velocity is not a pre-impact braking force.
+        const end = b.phase === 'floating' && ['speed_ms', 'mach', 'g_load'].includes(f)
+          ? (f === 'speed_ms' ? (rm.splash_speed_ms ?? a[f]) : a[f]) : b[f];
+        o[f] = lerp(a[f], end, k);
+      }
+    }
     o.phase = t < X.tEI ? 'coast' : t < X.tMain ? 'entry' : t < X.tSplash ? 'main' : 'floating';
-    return Object.assign(o, { t, tMain: X.tMain, tSplash: X.tSplash, tRecovery: X.tRecovery,
+    return Object.assign(o, { t, tMain: X.tMain, mainFill: X.mainFill, tSplash: X.tSplash, tRecovery: X.tRecovery,
       splashKm: rm.splash_downrange_km, shipKm: rm.ship_offset_km, shipMs: rm.ship_speed_ms });
   }
   function returnState(M, t) {    // for the orbital scene: stage separated, heat shield inflation 0..1
     const X = M.x;
-    return { armParked: t >= X.tArmPark, sep: t >= X.tSep, sepAge: Math.max(0, t - X.tSep), inflate: t < X.tInflate ? 0 : clamp((t - X.tInflate) / X.inflateS, 0.001, 1) };
+    // The physical model applies an instantaneous impulse. These short windows only make that event readable.
+    const deorbitCue = Number.isFinite(X.tBurn) ? smooth((t - X.tBurn + 20) / 15) * (1 - smooth((t - X.tBurn - 5) / 15)) : 0;
+    return { t, tBurn: X.tBurn, deorbitDv: X.deorbitDv, burnActive: t >= X.tBurn && t < X.tBurn + 3, deorbitCue,
+      armParked: t >= X.tArmPark, sep: t >= X.tSep, sepAge: Math.max(0, t - X.tSep), inflate: t < X.tInflate ? 0 : clamp((t - X.tInflate) / X.inflateS, 0.001, 1) };
   }
   function autoRate(M, t) {
     const X = M.x;
@@ -172,10 +189,15 @@
     if (t < X.tTouch + 12) return 3;                 // landing burn and touchdown
     if (t < X.tSeco - 40) return 300;                // upper-stage coast to apogee
     if (t < X.opsStart) return 20;                   // circularisation
-    if (X.retShot && t >= X.retShot[0] && t < X.retShot[1]) {   // the return shot: entry, drogue, main, splashdown, ship
-      if (t < X.tMain - 8) return Math.abs(t - X.tPeak) < 40 ? 8 : 15;
+    if (t >= X.tBurn - 5 && t < X.tBurn + 5) return 1;
+    if (X.retShot && t >= X.retShot[0] && t < X.retShot[1]) {   // model sequence: entry, main, splashdown, ship
+      if (t < X.tMain - 3) return Math.abs(t - X.tPeak) < 40 ? 8 : 15;
+      if (t < X.tMain + X.mainFill + 5) return 1;              // six-second inflation remains readable
       if (t < X.tSplash - 20) return 20;
-      if (t < X.tSplash + 15) return 8;
+      if (t < X.tSplash + 10) return 1;                       // no artificial braking before water contact
+      if (t < X.tShipArrival) return 30;
+      if (t < X.tRecovery - 10) return 20;                    // approach, lift, swing and lower onto the deck
+      if (t < X.tRecovery + 10) return 1;
       return 120;
     }
     if (t < X.tSetup) return 300;                                                     // day 0: commissioning, module activation, thaws

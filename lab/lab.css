@@ -935,6 +935,81 @@ body[data-lab-page="experiments"] .cols > div > section + section { border-top: 
   .sim-scene-actions .btn { min-height: 45px; }
   body[data-workspace="lab"]:not([data-lab-page="configure"]):not([data-lab-page="simulate"]) main.wrap > section:not(.hero):not(.start) { padding-top: 22px; margin-top: 26px; }
 }
+/* Tool colors identify actions, never scientific pass/warning/error states. */
+:root, html[data-theme="light"] {
+  --tool-config: #7046b8; --tool-config-hover: #5b339c;
+  --tool-play: #a64c13; --tool-play-hover: #893c0c; --tool-button-ink: #fff;
+  --tool-science: #087867; --tool-spacecraft: #4e5eb5; --tool-payload: #08778a; --tool-sim: #087393;
+}
+html[data-theme="dark"] {
+  --tool-config: #c7b0fa; --tool-config-hover: #d9c9ff;
+  --tool-play: #ffc08b; --tool-play-hover: #ffd5b1; --tool-button-ink: #122a3d;
+  --tool-science: #80dbc7; --tool-spacecraft: #b5bdfa; --tool-payload: #83d9dc; --tool-sim: #87d5ee;
+}
+.cfg-steps li[data-step="1"], .cfg-step[data-step="1"] .section-icon, .summary-platform .lucide, .cad-bar { --control-accent: var(--tool-spacecraft); }
+.cfg-steps li[data-step="2"], .cfg-step[data-step="2"] .section-icon, .exp-icon { --control-accent: var(--tool-science); }
+.cfg-steps li[data-step="3"], .cfg-step[data-step="3"] .section-icon { --control-accent: var(--tool-payload); }
+.cfg-steps li[data-step="4"], .cfg-step[data-step="4"] .section-icon, .summary-heading .section-icon { --control-accent: var(--tool-config); }
+.cfg-steps li b, .cfg-step .section-icon, .summary-heading .section-icon, .exp-icon {
+  color: var(--control-accent); background: color-mix(in srgb, var(--control-accent) 11%, var(--lab-raised));
+  border-color: color-mix(in srgb, var(--control-accent) 25%, var(--line));
+}
+.cfg-steps li.on { background: color-mix(in srgb, var(--control-accent) 7%, var(--lab-raised)); }
+.cfg-steps li.on::after { background: var(--control-accent); }
+.cfg-steps li.on b { background: var(--control-accent); color: var(--tool-button-ink); }
+.cfg-steps li.done b { color: var(--control-accent); background: color-mix(in srgb, var(--control-accent) 14%, var(--lab-raised)); }
+.cfg-steps button:hover:enabled { background: color-mix(in srgb, var(--control-accent) 9%, var(--lab-raised)); }
+.cfg-steps button:focus-visible { outline-color: var(--control-accent); }
+.cfg-nav #cfg-next { background: var(--tool-config); color: var(--tool-button-ink); box-shadow: 0 4px 12px color-mix(in srgb, var(--tool-config) 17%, transparent); }
+.cfg-nav #cfg-next:hover:enabled { background: var(--tool-config-hover); }
+.cfg-nav #cfg-next:focus-visible, #sim-back:focus-visible { outline-color: var(--tool-config); }
+.cfg-sum { border-top-color: var(--tool-config); }
+.cfg-hero .kicker .lucide, .cfg-hero h1 span, #sim-back .lucide { color: var(--tool-config); }
+.summary-platform .lucide, .mode-top > .lucide { color: var(--tool-spacecraft); }
+.mode:hover, .mode.on { border-color: var(--tool-spacecraft); }
+.mode.on { box-shadow: 0 0 0 1px var(--tool-spacecraft), var(--lab-shadow); background: linear-gradient(130deg, color-mix(in srgb, var(--tool-spacecraft) 9%, var(--lab-raised)), var(--lab-raised)); }
+.mode.on .mode-check { background: var(--tool-spacecraft); border-color: var(--tool-spacecraft); color: var(--tool-button-ink); }
+.mode:focus-within { outline-color: var(--tool-spacecraft); }
+.xcard:hover, .xcard.pick.on { border-color: var(--tool-science); }
+.xcard:hover { background: color-mix(in srgb, var(--tool-science) 4%, var(--lab-raised)); }
+.xcard.pick.on { box-shadow: 0 0 0 1px var(--tool-science), var(--lab-shadow); background: color-mix(in srgb, var(--tool-science) 7%, var(--lab-raised)); }
+.xcard:focus-visible { outline-color: var(--tool-science); }
+.xcard .f, .pick.on .exp-card-top .n { color: var(--tool-science); }
+.experiment-search:focus-within { border-color: var(--tool-science); box-shadow: 0 0 0 1px var(--tool-science); }
+.preparation-brief .lucide, .guide-h .lucide { color: var(--tool-payload); }
+#sim-play, #sim-scene-play, .cfg-sum a.btn[href^="simulate"], .sim-cta > .btn {
+  background: var(--tool-play); color: var(--tool-button-ink); border-color: var(--tool-play);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--tool-play) 16%, transparent);
+}
+#sim-play:hover:enabled, #sim-scene-play:hover:enabled, .cfg-sum a.btn[href^="simulate"]:hover, .sim-cta > .btn:hover {
+  background: var(--tool-play-hover); border-color: var(--tool-play-hover); color: var(--tool-button-ink);
+}
+#sim-play:focus-visible, #sim-scene-play:focus-visible, .cfg-sum a.btn[href^="simulate"]:focus-visible, .sim-cta > .btn:focus-visible { outline-color: var(--tool-play); }
+#sim-play:disabled, #sim-scene-play:disabled { box-shadow: none; }
+#sim-tabs, #sim-speed, .sim-inspector-tabs, .sim-recovery-review { --control-accent: var(--tool-sim); }
+#sim-tabs button[data-v="ascent"], .sim-recovery-jumps button[data-recovery="burn"], .sim-recovery-jumps button[data-recovery="entry"] { --control-accent: var(--tool-play); }
+#sim-tabs button[data-v="map"] { --control-accent: var(--accent); }
+#sim-tabs button[data-v="3d"], .sim-inspector-tabs button[data-panel="cad"] { --control-accent: var(--tool-spacecraft); }
+.sim-inspector-tabs button[data-panel="events"] { --control-accent: var(--tool-config); }
+.sim-recovery-jumps button[data-recovery="deployment"] { --control-accent: var(--tool-config); }
+.sim-recovery-jumps button[data-recovery="recovered"] { --control-accent: var(--tool-payload); }
+#sim-tabs button .lucide, .sim-inspector-tabs button .lucide, .sim-recovery-jumps button .lucide { color: var(--control-accent); }
+#sim-tabs button:hover, #sim-speed button:hover, .sim-inspector-tabs button:hover, .sim-recovery-jumps button:hover:enabled, .cad-bar .seg button:hover {
+  background: color-mix(in srgb, var(--control-accent) 10%, var(--lab-raised)); border-color: color-mix(in srgb, var(--control-accent) 34%, var(--line));
+}
+#sim-tabs button.on, #sim-speed button.on, .sim-inspector-tabs button.on, .cad-bar .seg button.on {
+  color: var(--control-accent); background: color-mix(in srgb, var(--control-accent) 11%, var(--lab-raised)); border-color: color-mix(in srgb, var(--control-accent) 48%, var(--line));
+}
+#sim-tabs button:focus-visible, #sim-speed button:focus-visible, .sim-inspector-tabs button:focus-visible, .sim-recovery-jumps button:focus-visible, .cad-bar .seg button:focus-visible { outline-color: var(--control-accent); }
+.sim-recovery-jumps button.on, .sim-recovery-jumps button.on:hover:enabled { background: var(--control-accent); border-color: var(--control-accent); color: var(--tool-button-ink); }
+.sim-recovery-jumps button.on .lucide { color: inherit; }
+body[data-lab-page="simulate"] .sim-title .kicker .lucide, .sim-recovery-heading .kicker .lucide { color: var(--tool-sim); }
+.sim-detail .lucide-clipboard-list { color: var(--tool-payload); }
+.sim-detail .lucide-chart-no-axes-combined { color: var(--tool-science); }
+.sim-recovery-jumps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.sim-stage.is-expanded .sim-recovery-jumps { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+@media (min-width: 1400px) { .sim-recovery-jumps { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+@media (max-width: 720px) { .sim-recovery-jumps, .sim-stage.is-expanded .sim-recovery-jumps { grid-template-columns: repeat(3, minmax(0, 1fr)); } .sim-recovery-jumps button { min-height: 44px; gap: 4px; padding: 6px; font-size: 9px; } .sim-recovery-jumps button .lucide { width: 12px; height: 12px; } }
 @media print {
   html[data-theme] { --bg:#fff; --paper:#fff; --lab-surface:#fff; --lab-raised:#fff; --lab-soft:#f4f9fd; --ink:#14334b; --ink-2:#425f73; --ink-3:#536f82; --line:#d6e5ee; --accent:#0866bc; --accent-ink:#00558c; --lab-shadow:none; }
   body[data-workspace="lab"] { background:#fff; }

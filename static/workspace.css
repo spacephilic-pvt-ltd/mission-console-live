@@ -58,3 +58,20 @@ body[data-workspace="globe"] #globe-controls button:not(:disabled):hover,body[da
 body[data-workspace="globe"] #globe-controls button[aria-pressed="true"],body[data-workspace="globe"] #globe-controls #play{background:var(--ws-primary);color:var(--ws-primary-ink);border-color:transparent;box-shadow:0 3px 10px rgba(8,102,188,.14)}
 body[data-workspace="globe"] #globe-controls button[aria-pressed="true"]:not(:disabled):hover,body[data-workspace="globe"] #globe-controls #play:not(:disabled):hover{background:var(--ws-primary);color:var(--ws-primary-ink);border-color:transparent;filter:brightness(1.06)}
 body[data-workspace="globe"] :focus-visible{outline:3px solid var(--gl-accent);outline-offset:3px}
+
+/* Workspace identity is supplemental to the icon, label and current-page state.
+   These colors identify tools; scientific good/warning/critical colors stay separate. */
+:root{--accent-mission:#a64c13;--accent-configure:#7046b8;--accent-simulate:#087393;--accent-research:#087867;--accent-spacecraft:#4e5eb5;--accent-payload:#08778a;--accent-earth:#0866bc}
+html[data-theme="dark"]{--accent-mission:#ffc08b;--accent-configure:#c7b0fa;--accent-simulate:#87d5ee;--accent-research:#80dbc7;--accent-spacecraft:#b5bdfa;--accent-payload:#83d9dc;--accent-earth:#8bcefa}
+.ws-link{--nav-accent:var(--accent-earth)}
+.ws-link[data-workspace-link="console"]{--nav-accent:var(--accent-mission)}
+.ws-link[data-workspace-link="configure"]{--nav-accent:var(--accent-configure)}
+.ws-link[data-workspace-link="simulate"]{--nav-accent:var(--accent-simulate)}
+.ws-link[data-workspace-link="experiments"]{--nav-accent:var(--accent-research)}
+.ws-link[data-workspace-link="spacecraft"]{--nav-accent:var(--accent-spacecraft)}
+.ws-link[data-workspace-link="customer"]{--nav-accent:var(--accent-payload)}
+.ws-link:not([aria-current="page"]) svg{color:var(--nav-accent)}
+.ws-link:hover{background:color-mix(in srgb,var(--nav-accent) 9%,var(--ws-surface));border-color:color-mix(in srgb,var(--nav-accent) 25%,var(--ws-line));color:var(--nav-accent)}
+.ws-link[aria-current="page"],.ws-link[aria-current="page"]:hover{background:linear-gradient(135deg,var(--nav-accent),color-mix(in srgb,var(--nav-accent) 88%,#000));color:var(--ws-primary-ink);border-color:transparent;box-shadow:0 4px 12px color-mix(in srgb,var(--nav-accent) 18%,transparent)}
+.ws-link[aria-current="page"] svg{color:inherit;stroke-width:2}
+.ws-link:focus-visible{outline-color:var(--nav-accent)}

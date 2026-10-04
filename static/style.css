@@ -765,3 +765,17 @@ html[data-theme] body[data-workspace] .stage-tools .btn {border-radius:8px;}
 html[data-theme] body[data-workspace] .hud-chip {border-radius:8px;}
 html[data-theme] body[data-workspace] :is(button,a,summary,input,select,textarea):focus-visible {outline:3px solid var(--s1);outline-offset:3px;}
 @media(prefers-reduced-motion:reduce){html[data-theme] body[data-workspace] .btn:active{transform:none;}}
+
+/* Focused-view colors add recognition without changing any telemetry status. */
+html[data-theme] body[data-workspace] .focus-tabs button{--view-accent:var(--accent-earth)}
+html[data-theme] body[data-workspace="console"] .focus-tabs button[data-focus="overview"]{--view-accent:var(--accent-mission)}
+html[data-theme] body[data-workspace="console"] .focus-tabs button[data-focus="security"]{--view-accent:var(--accent-research)}
+html[data-theme] body[data-workspace="console"] .focus-tabs button[data-focus="events"]{--view-accent:var(--accent-configure)}
+html[data-theme] body[data-workspace] .focus-tabs button:not(.on) svg{color:var(--view-accent)}
+html[data-theme] body[data-workspace] .focus-tabs button:not(.on):hover{background:color-mix(in srgb,var(--view-accent) 8%,var(--surface));color:var(--view-accent);border-color:color-mix(in srgb,var(--view-accent) 24%,var(--line));}
+html[data-theme] body[data-workspace] .focus-tabs button.on{background:linear-gradient(135deg,var(--view-accent),color-mix(in srgb,var(--view-accent) 88%,#000));color:var(--theme-primary-ink);border-color:transparent;box-shadow:0 3px 10px color-mix(in srgb,var(--view-accent) 16%,transparent);}
+html[data-theme] body[data-workspace="console"] .title-dot,html[data-theme] body[data-workspace="console"] #panel-launch .section-icon{color:var(--accent-mission)}
+html[data-theme] body[data-workspace="console"] #panel-platform .section-icon{color:var(--accent-spacecraft)}
+html[data-theme] body[data-workspace="console"] #panel-sentinel .section-icon{color:var(--accent-research)}
+html[data-theme] body[data-workspace="console"] #panel-feed .section-icon{color:var(--accent-configure)}
+html[data-theme] body[data-workspace] .transport .btn.primary,html[data-theme] body[data-workspace] .transport .btn.primary:not(:disabled):hover{background:linear-gradient(135deg,var(--accent-mission),color-mix(in srgb,var(--accent-mission) 88%,#000));color:var(--theme-primary-ink);border-color:transparent;box-shadow:0 3px 10px color-mix(in srgb,var(--accent-mission) 16%,transparent)}

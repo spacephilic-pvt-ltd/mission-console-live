@@ -2,7 +2,7 @@
    to end: late load, the RUPAK launch, orbit and checkout, the customer's protocol day by day, the return under the
    inflatable heat shield, recovery, handover and the lab. The engine is lab/sim.js; this file draws it: ground-track map,
    launch and entry charts, protocol strip, temperature / dose / data charts, the CAD (cad.js) with the part each step
-   works, the Sentinel command log and the mission report. Presentation mode plays the whole mission in about two minutes. */
+   works, the Sentinel command log and the mission report. Playback pauses its fast pace around visible return mechanisms. */
 (async function () {
   'use strict';
   const $ = (s, r = document) => r.querySelector(s);
@@ -127,7 +127,7 @@
   // ---------- 3-D: the console's launch and return shots (web/static/scene.js through replay.js) on this mission's clock ----------
   // The launch is the twin's RUPAK flight as the console plays it; on LELP-1 the return is the twin's Return Module, moved to
   // this mission's deorbit time. A dedicated satellite's capsule is not the Return Module, so its return stays a chart.
-  let Mx = null, scene3d = null, ready3d = false;
+  let Mx = null, scene3d = null, ready3d = false, sceneSnap = true, lastSceneMissionTime = null;
   const W3 = $('#sim-3dw'), C3 = $('#sim-3dc');
   const loadScript = (src) => new Promise((ok, no) => { const el = document.createElement('script'); el.src = src; el.onload = ok; el.onerror = no; document.head.appendChild(el); });
   const sceneBuild = document.querySelector('meta[name="build"]')?.content || D.build;
@@ -138,9 +138,11 @@
   recoveryPanel.hidden = !ret3d;
   const recoveryMoments = () => {
     if (!ret3d || !Mx || !Mx.x.retShot) return null;
-    const x = Mx.x, clamp = (t) => Math.max(x.retShot[0], Math.min(SIM.tEnd, x.retShot[1] - 0.01, t));
+    const x = Mx.x, clamp = (t) => Math.max(Math.min(M.deorbit - 10, x.retShot[0]), Math.min(SIM.tEnd, x.retShot[1] - 0.01, t));
     return {
+      burn: clamp((Number.isFinite(x.tBurn) ? x.tBurn : M.deorbit) - 3),
       entry: clamp(Number.isFinite(x.tPeak) ? x.tPeak : x.tEI),
+      deployment: clamp(x.tMain - 3),
       canopy: clamp(Math.min(x.tSplash - 0.1, Math.max(x.tMain + 8, x.tSplash - 20))),
       splash: clamp(x.tSplash + 2),
       recovered: clamp(x.tRecovery + 1),
@@ -151,7 +153,8 @@
     if (!moments) return;
     recoveryButtons.forEach((button) => {
       const key = button.dataset.recovery;
-      const note = key === 'entry' ? 'Peak entry heating' : key === 'canopy' ? `Final descent, ${Math.round(Mx.x.tSplash - moments.canopy)} seconds before water contact`
+      const note = key === 'burn' ? 'Three seconds before the modelled retrograde deorbit impulse' : key === 'entry' ? 'Peak entry heating'
+        : key === 'deployment' ? 'Three seconds before main canopy deployment at 4 km' : key === 'canopy' ? `Final descent, ${Math.round(Mx.x.tSplash - moments.canopy)} seconds before water contact`
         : key === 'splash' ? 'Two seconds after modelled splashdown' : 'One second after modelled recovery';
       button.disabled = false; button.title = `${note} · ${met(moments[key])} · pauses playback`;
       button.onclick = () => jumpRecovery(key);
@@ -163,16 +166,20 @@
     const x = Mx.x;
     const rm = Mx.reentry_meta, arrival = x.tSplash + rm.ship_offset_km * 1000 / Math.max(rm.ship_speed_ms, 0.001);
     const hoisting = t >= arrival && t < x.tRecovery;
-    const stage = t < x.tEI ? '' : t < x.tMain ? 'entry' : t < x.tSplash ? 'canopy' : t < x.tRecovery ? 'splash' : 'recovered';
-    const state = hoisting ? 'Crane lifting capsule aboard' : { '': 'Return not started', entry: 'Atmospheric entry', canopy: 'Main canopy descent', splash: 'Afloat · awaiting recovery', recovered: 'Recovered aboard ship' }[stage];
+    const lead = t >= M.deorbit - 10 && t < x.tEI, ret = lead ? Replay.returnState(Mx, t) : null;
+    const fill = Number.isFinite(x.mainFill) ? x.mainFill : 6;
+    const stage = lead ? 'burn' : t < x.tEI ? '' : t < x.tMain - 3 ? 'entry' : t < x.tMain + fill + 5 ? 'deployment' : t < x.tSplash ? 'canopy' : t < x.tRecovery ? 'splash' : 'recovered';
+    const leadState = ret && (ret.burnActive ? 'Retrograde deorbit impulse' : ret.inflate >= 1 ? 'Heat shield deployed' : ret.inflate > 0 ? 'Heat shield deployment' : ret.sep ? 'Capsule separated' : t < M.deorbit ? 'Preparing for deorbit' : 'Coasting after deorbit');
+    const state = hoisting ? 'Crane lifting capsule aboard' : leadState || { '': 'Return not started', entry: 'Atmospheric entry', deployment: t < x.tMain ? 'Preparing to deploy canopy' : t < x.tMain + fill ? 'Main canopy inflation' : 'Main canopy inflated', canopy: 'Main canopy descent', splash: 'Afloat · awaiting recovery', recovered: 'Recovered aboard ship' }[stage];
     const status = $('#sim-recovery-state');
     if (status.textContent !== state) status.textContent = state;
     recoveryButtons.forEach((button) => { const on = button.dataset.recovery === stage; button.classList.toggle('on', on); button.setAttribute('aria-pressed', String(on)); });
-    const detail = hoisting ? 'Crane lifting capsule aboard during the modelled ship-arrival-to-recovery interval.' : { '': 'Jump to a modelled return stage to inspect it.', entry: 'Entry heating follows the return model; the main canopy is stowed.',
-      canopy: `Main canopy deployed · ${Math.max(0, Math.ceil(x.tSplash - t))} s until modelled water contact.`,
+    const detail = lead ? 'The upper stage applies the modelled retrograde deorbit impulse before capsule separation. The thrust cue is schematic.' : hoisting ? 'Crane lifting capsule aboard during the modelled ship-arrival-to-recovery interval.' : { '': 'Jump to a modelled return stage to inspect it.', entry: 'Entry heating follows the return model; the main canopy is stowed until 4 km.',
+      deployment: t < x.tMain ? `Canopy stowed · deployment begins at ${rm.main_alt_km || 4} km in ${Math.max(0, Math.ceil(x.tMain - t))} s.` : `Main canopy opens over ${fill} model seconds after deployment at ${rm.main_alt_km || 4} km.`,
+      canopy: `Main canopy deploys at ${rm.main_alt_km || 4} km · ${Math.max(0, Math.ceil(x.tSplash - t))} s until modelled water contact.`,
       splash: 'The capsule floats while the recovery ship approaches.', recovered: 'The capsule is aboard the recovery ship. The vessel is illustrative.' }[stage];
-    const rate = stage && reviewPlayback ? recoveryPlaybackRate(t) : null;
-    const message = (stage ? (playing ? (reviewPlayback ? `Scene replay · ${rate}×. ` : 'Replay running. ') : 'Replay paused. ') : '') + detail;
+    const rate = (stage || lead) && reviewPlayback ? recoveryPlaybackRate(t) : null;
+    const message = (stage || lead ? (playing ? (reviewPlayback ? `Scene replay · ${rate}×. ` : 'Replay running. ') : 'Replay paused. ') : '') + detail;
     if ($('#sim-recovery-help').textContent !== message) $('#sim-recovery-help').textContent = message;
   }
   (async () => {
@@ -196,7 +203,7 @@
     } catch (err) { $('#d-note').textContent = '3-D view unavailable: ' + err.message; if (ret3d) $('#sim-recovery-state').textContent = '3D unavailable · Return chart is available'; }
   })();
   const inLaunch3d = (s) => s >= -60 && s < T.t_orbit_s + 30;
-  const inReturn3d = (s) => ret3d && Mx && Mx.x.retShot && s >= Mx.x.retShot[0] && s < Mx.x.retShot[1];
+  const inReturn3d = (s) => ret3d && Mx && Mx.x.retShot && s >= Math.min(M.deorbit - 10, Mx.x.retShot[0]) && s < Mx.x.retShot[1];
   function draw3d(st, dt) {
     if (!Mx) return;
     if (!scene3d) {
@@ -206,9 +213,21 @@
     const s = st.s;
     if (!inLaunch3d(s) && inReturn3d(s)) {
       const cap = Replay.reentryAt(Mx, s);
-      scene3d.setPhase('return'); scene3d.updateReturn(cap, dt);
-      $('#d-hud').innerHTML = `<span>${esc(Replay.reentryReadout(cap))}</span>`;
-      $('#d-note').textContent = 'LELP-1 return follows the twin\'s model. Vehicle shown 40×; positions follow the model. Recovery vessel is illustrative.';
+      if (cap) {
+        scene3d.setPhase('return'); scene3d.updateReturn(cap, dt, { snap: sceneSnap });
+        $('#d-hud').innerHTML = `<span>${esc(Replay.reentryReadout(cap))}</span>`;
+        $('#d-note').textContent = 'LELP-1 return follows the twin\'s model. Vehicle shown 40×; positions follow the model. Recovery vessel is illustrative.';
+      } else {
+        const ret = Replay.returnState(Mx, s);
+        scene3d.setPhase('ops'); scene3d.setSolar(!ret.sep);
+        // This is a mechanism schematic: no fabricated module telemetry or arm joints.
+        scene3d.updateOps({ t: s, platform: { arm: null }, comms: { visible: [] } }, [], [], dt,
+          { ret, snap: sceneSnap, dtm: lastSceneMissionTime == null ? 0 : Math.max(0, s - lastSceneMissionTime) });
+        const phase = ret.burnActive ? 'RETROGRADE DEORBIT IMPULSE' : ret.inflate >= 1 ? 'HEAT SHIELD DEPLOYED' : ret.inflate > 0 ? 'HEAT SHIELD DEPLOYMENT' : ret.sep ? 'CAPSULE SEPARATED' : s < M.deorbit ? 'PREPARING FOR DEORBIT' : 'COASTING AFTER DEORBIT';
+        $('#d-hud').innerHTML = `<span>LELP-1 · ${phase}</span>`;
+        $('#d-note').textContent = 'Orbital return mechanism schematic. The upper stage applies the modelled retrograde impulse before capsule separation; the plume is illustrative.';
+      }
+      sceneSnap = false; lastSceneMissionTime = s;
       return;
     }
     const t = Math.max(Replay.T0, Math.min(s, T.t_orbit_s + 30));
@@ -373,6 +392,8 @@
     LOG.innerHTML = out.join('');
   }
   const CAP = $('#sim-caption');
+  const captionTitle = (title) => String(title).includes('_')
+    ? String(title).toLowerCase().replace(/_+/g, ' ').replace(/^[a-z]/, (c) => c.toUpperCase()).replace(/\bhiad\b/g, 'HIAD') : String(title);
   let capKey = '';
   function caption(st) {
     let v = null;
@@ -383,7 +404,7 @@
       html = st.s >= Mx.x.tRecovery ? '<b>Recovered aboard</b><span>The return module is secured on the recovery deck.</span>'
         : st.s >= arrival ? '<b>Crane recovery</b><span>Lift clear of the water, swing over the rail, then lower onto the deck.</span>'
         : '<b>Sea recovery</b><span>The capsule floats on its aeroshell while the recovery vessel approaches.</span>';
-    } else if (v) html = `<b>${esc(v.title)}</b><span>${esc(v.text)}</span>`;
+    } else if (v) html = `<b>${esc(captionTitle(v.title))}</b><span>${esc(v.text)}</span>`;
     else if (st.phase.id === 'protocol') { const d = (st.s - SIM.sStart) / DAY; html = `<b>Day ${Math.floor(d) + 1} of ${days}</b><span>${f1(st.temp)} °C · ${f2(st.dose)} mGy · ${f1(st.down)} MB to you${st.step ? ' · last step: ' + esc(st.step.title) : ''}</span>`; }
     else html = `<b>${esc(st.phase.name)}</b><span>${esc(M.ev.filter((q) => q[0] <= st.s).pop() ? M.ev.filter((q) => q[0] <= st.s).pop()[2] : '')}</span>`;
     if (html !== capKey) { capKey = html; CAP.innerHTML = html; }
@@ -438,7 +459,38 @@
 
   // ---------- playback ----------
   let s = -DAY, playing = false, speed = 'auto', lastT = null, force = true, shownS = null, reviewPlayback = false;
-  const recoveryPlaybackRate = (t) => t < Mx.x.tSplash - 30 ? 8 : t < Mx.x.tSplash + 10 ? 1 : 30;
+  function recoveryPacingWindows() {
+    if (!ret3d || !Mx) return [];
+    const x = Mx.x, rm = Mx.reentry_meta, fill = Number.isFinite(rm.main_fill_s) ? rm.main_fill_s : 6;
+    const arrival = x.tSplash + rm.ship_offset_km * 1000 / Math.max(rm.ship_speed_ms, .001);
+    // Values are mission seconds. Only presentation rate changes; the twin's timeline is untouched.
+    return [[M.deorbit - 5, M.deorbit + 5, 1], [x.tSep - 3, x.tSep + 12, 2],
+      [x.tInflate - 3, x.tInflate + x.inflateS + 3, 6], [x.tPeak - 12, x.tPeak + 12, 2],
+      [x.tMain - 3, x.tMain + fill + 5, 1], [x.tSplash - 20, x.tSplash + 10, 1],
+      [x.tSplash + 10, arrival, 30], [arrival, x.tRecovery + 5, 20]]
+      .filter(([a, b]) => Number.isFinite(a) && Number.isFinite(b) && b > a).sort((a, b) => a[0] - b[0]);
+  }
+  function recoveryPlaybackRate(t) {
+    const window = recoveryPacingWindows().find(([a, b]) => t >= a && t < b);
+    return window ? window[2] : t < Mx.x.tEI ? 30 : 8;
+  }
+  function advancePlayback(t, wallSeconds, review = false) {
+    const windows = recoveryPacingWindows(), end = review && Mx ? Math.min(Mx.x.tRecovery + 5, SIM.tEnd) : SIM.tEnd;
+    const boundaries = [...new Set(windows.flatMap(([a, b]) => [a, b]).concat(end))].filter(Number.isFinite).sort((a, b) => a - b);
+    let remaining = Math.max(0, wallSeconds);
+    // Spend the remainder of each frame after landing exactly on a rate boundary.
+    // This prevents a compressed coast from skipping the canopy or water-contact window.
+    for (let i = 0; i < 32 && remaining > 1e-8 && t < end; i++) {
+      const window = windows.find(([a, b]) => t >= a - 1e-7 && t < b - 1e-7);
+      const boundary = Math.min(end, boundaries.find((v) => v > t + 1e-7) ?? end);
+      const rate = window ? window[2] : review ? recoveryPlaybackRate(t) : null;
+      const next = Math.min(boundary, rate == null ? SIM.toMission(SIM.toPlay(t) + remaining) : t + remaining * rate);
+      const used = rate == null ? SIM.toPlay(next) - SIM.toPlay(t) : (next - t) / rate;
+      if (next <= t || used < 0) break;
+      t = next; remaining = Math.max(0, remaining - used);
+    }
+    return Math.min(t, end);
+  }
   const btn = $('#sim-play');
   btn.disabled = !SIM.go;
   const scenePlay = $('#sim-scene-play');
@@ -454,7 +506,7 @@
   function jumpRecovery(key) {
     const moments = recoveryMoments();
     if (!ready3d || !moments || !Object.hasOwn(moments, key)) return;
-    s = moments[key]; reviewPlayback = false; setPlaying(false); view = '3d';
+    s = moments[key]; reviewPlayback = false; sceneSnap = true; setPlaying(false); view = '3d';
     $$('#sim-tabs button').forEach((button) => { const on = button.dataset.v === '3d'; button.classList.toggle('on', on); button.setAttribute('aria-pressed', String(on)); });
     const url = new URL(location.href); url.searchParams.set('recovery', key); history.replaceState(null, '', url);
     force = false; shownS = s; render();
@@ -494,7 +546,7 @@
     if (ev.shiftKey && (document.activeElement === first || !sceneStage.contains(document.activeElement))) { ev.preventDefault(); last.focus(); }
     else if (!ev.shiftKey && (document.activeElement === last || !sceneStage.contains(document.activeElement))) { ev.preventDefault(); first.focus(); }
   }, true);
-  $('#sim-restart').onclick = () => { reviewPlayback = false; s = -DAY; force = true; $('#sim-report').hidden = true; setPlaying(SIM.go); };
+  $('#sim-restart').onclick = () => { reviewPlayback = false; sceneSnap = true; s = -DAY; force = true; $('#sim-report').hidden = true; setPlaying(SIM.go); };
   $('#sim-skip').onclick = () => { $('#sim-report').hidden = false; $('#sim-report').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }); };
   $$('#sim-speed button').forEach((b) => { b.onclick = () => { reviewPlayback = false; speed = b.dataset.v === 'auto' ? 'auto' : +b.dataset.v; $$('#sim-speed button').forEach((q) => { q.classList.toggle('on', q === b); q.setAttribute('aria-pressed', String(q === b)); }); }; });
   const inspectorTabs = $$('.sim-inspector-tabs button');
@@ -512,7 +564,7 @@
     };
   });
   const bar = $('#sim-bar');
-  const seek = (ev) => { reviewPlayback = false; const r = bar.getBoundingClientRect(); s = SIM.toMission(Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width)) * L); force = true; };
+  const seek = (ev) => { reviewPlayback = false; sceneSnap = true; const r = bar.getBoundingClientRect(); s = SIM.toMission(Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width)) * L); force = true; };
   bar.addEventListener('pointerdown', (ev) => { seek(ev); bar.setPointerCapture(ev.pointerId); bar.onpointermove = seek; });
   bar.addEventListener('pointerup', () => { bar.onpointermove = null; });
   bar.addEventListener('pointercancel', () => { bar.onpointermove = null; });
@@ -520,7 +572,7 @@
     const delta = { ArrowLeft: -1, ArrowDown: -1, ArrowRight: 1, ArrowUp: 1, PageDown: -10, PageUp: 10 }[ev.key];
     if (delta == null && ev.key !== 'Home' && ev.key !== 'End') return;
     ev.preventDefault();
-    reviewPlayback = false;
+    reviewPlayback = false; sceneSnap = true;
     const p = ev.key === 'Home' ? 0 : ev.key === 'End' ? L : SIM.toPlay(s) + delta * L / 100;
     s = SIM.toMission(Math.max(0, Math.min(L, p))); force = true;
   });
@@ -546,9 +598,9 @@
       const dt = frameDt;
       if (reviewPlayback && ret3d && Mx) {
         const reviewEnd = Math.min(Mx.x.tRecovery + 5, SIM.tEnd);
-        s = Math.min(reviewEnd, s + dt * recoveryPlaybackRate(s));
+        s = advancePlayback(s, dt, true);
         if (s >= reviewEnd) setPlaying(false);
-      } else s = speed === 'auto' ? SIM.toMission(SIM.toPlay(s) + dt) : s + dt * speed;
+      } else s = speed === 'auto' ? advancePlayback(s, dt) : s + dt * speed;
       if (s >= SIM.tEnd - 1e-6) { s = SIM.tEnd; setPlaying(false); $('#sim-report').hidden = false; }
     }
     lastT = now;
@@ -560,5 +612,5 @@
   if (H.get('play') === '1' && SIM.go) setPlaying(true);
   requestAnimationFrame(frame);
   // test hook: seek renders at once, so a hidden tab (no animation frames) can be checked too
-  window.__lelpSim = { sim: SIM, seek: (t) => { reviewPlayback = false; s = t; force = false; shownS = s; render(); }, play: () => { reviewPlayback = false; setPlaying(true); }, recoveryMoments, jumpRecovery, get s() { return s; } };
+  window.__lelpSim = { sim: SIM, seek: (t) => { reviewPlayback = false; sceneSnap = true; s = t; force = false; shownS = s; render(); }, play: () => { reviewPlayback = false; setPlaying(true); }, recoveryMoments, jumpRecovery, recoveryPacingWindows, advancePlayback, get s() { return s; } };
 })();

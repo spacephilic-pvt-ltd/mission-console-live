@@ -362,15 +362,16 @@
       const o = R.opsFrame(M, t); f = o.f; opsStates = o.states;
       const panelsNow = panels || S.dirty, cap = R.reentryAt(M, t);
       if (panelsNow) { $('panel-launch').hidden = true; $('panel-platform').hidden = false; }
-      if (cap) { scene.setPhase('return'); scene.updateReturn(cap, dt); }      // entry interface to recovery: true-scale return shot
+      if (cap) { scene.setPhase('return'); scene.updateReturn(cap, dt, { snap: !!S.sceneSnap }); }      // entry interface to recovery: true-scale return shot
       else { scene.setPhase('ops'); scene.setSolar(!!lastEvent(t, (e) => e.code === 'SOLAR') && t < X.tSep);
         const xs = R.expStates(M, t), feat = xs.find((x) => x.id === X.featured) || xs[0];
         const focus = (xs.filter((x) => x.glow).sort((a, b) => (b.id === X.featured) - (a.id === X.featured))[0] || {}).module;
-        scene.updateOps(o.view, opsStates, f.gate.isolated || [], dt, { ret: R.returnState(M, t), exps: xs, saa: !!(feat && feat.saa),
+        scene.updateOps(o.view, opsStates, f.gate.isolated || [], dt, { ret: R.returnState(M, t), snap: !!S.sceneSnap, exps: xs, saa: !!(feat && feat.saa),
           focusModule: focus, dtm: S.playing ? dt * S.rate : 0 });
         if (panels) dayChip(t, X, feat); }
       if (panelsNow) panelOps(t, f, o.i, cap);
     }
+    S.sceneSnap = false;
     $('track-fill').style.width = $('track-head').style.left = (t2x(t) * 100).toFixed(3) + '%';
     if (panels || S.dirty) { $('track').setAttribute('aria-valuenow', String(Math.round(t))); $('track').setAttribute('aria-valuetext', met(t)); panelClock(t); panelSentinel(t); panelFeed(t); panelScore(t, f); S.lastPanels = now; S.dirty = false; }
   }
@@ -392,7 +393,7 @@
     $('btn-play').setAttribute('aria-label', on ? 'Pause replay' : 'Play replay');
     $('btn-play').setAttribute('aria-pressed', String(on));
   }
-  function seek(t) { S.t = clamp(t, T0, D().x.tEnd); $('feed').innerHTML = ''; S.feedIdx = 0; sparkKey = ''; S.dirty = true; if (S.speed === 'auto') S.rate = autoRate(S.t); }
+  function seek(t) { S.t = clamp(t, T0, D().x.tEnd); $('feed').innerHTML = ''; S.feedIdx = 0; sparkKey = ''; S.dirty = true; S.sceneSnap = true; if (S.speed === 'auto') S.rate = autoRate(S.t); }
   function jump(dir) { const m = D().x.marks, i = lastBefore(m, S.t + (dir > 0 ? 0.6 : -0.6)), n = m[i + (dir > 0 ? 1 : 0)]; if (dir > 0 ? n : i >= 0) seek((dir > 0 ? n : m[i]).t - 0.5); else if (dir < 0) seek(T0); }
   async function setMode(m) {
     if (!data[m]) { const b = $('btn-' + m), label = b.textContent; b.textContent = 'LOADING…'; try { data[m] = await load(m); } catch (e) { b.textContent = label; return; } b.textContent = label; }

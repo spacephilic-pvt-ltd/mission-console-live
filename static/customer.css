@@ -240,3 +240,12 @@ html[data-theme] body[data-workspace="customer"] .bf-row>span {color:var(--ink-3
 html[data-theme] body[data-workspace="customer"] .bf-row small {line-height:1.6;}
 html[data-theme] body[data-workspace="customer"] :is(.deliveries,.audit,.return) .ft {color:var(--s1);font-weight:500;}
 html[data-theme] body[data-workspace="customer"] .vials {background:linear-gradient(135deg,var(--surface),var(--theme-chart));}
+
+/* Distinguish customer views; controls retain their explicit safety states. */
+html[data-theme] body[data-workspace="customer"] .focus-tabs button[data-focus="overview"]{--view-accent:var(--accent-payload)}
+html[data-theme] body[data-workspace="customer"] .focus-tabs button[data-focus="controls"]{--view-accent:var(--accent-earth)}
+html[data-theme] body[data-workspace="customer"] .focus-tabs button[data-focus="results"]{--view-accent:var(--accent-configure)}
+html[data-theme] body[data-workspace="customer"] .title-dot,html[data-theme] body[data-workspace="customer"] #panel-sample .section-icon{color:var(--accent-payload)}
+html[data-theme] body[data-workspace="customer"] #panel-right .section-icon{color:var(--accent-research)}
+html[data-theme] body[data-workspace="customer"] #right-tabs button:not(.on) svg{color:var(--accent-configure)}
+html[data-theme] body[data-workspace="customer"] #right-tabs button.on{color:var(--accent-configure);border-bottom-color:var(--accent-configure)}

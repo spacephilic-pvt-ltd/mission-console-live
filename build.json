@@ -1,10 +1,9 @@
 {
-  "build": "ocean-20261004-r2",
-  "built_at": "2026-10-04T10:10:52Z",
+  "build": "return-20261004-r3",
+  "built_at": "2026-10-04T10:53:49Z",
   "sha": null,
   "source_git_sha": null,
   "source_kind": "local working-tree static export",
-  "content_snapshot_sha256": "00900fe05619f1b777ed6b69e2e00d14c78cf9d14d0167c88039fdf44150b6ac",
-  "publication_scope": "Static build artifacts only",
-  "assets_updated_at": "2026-10-04T10:15:13Z"
+  "content_snapshot_sha256": "ce4fffd2225705b63c1e17ff043f584bc8a952b66fe45c1f419bba82905236c9",
+  "publication_scope": "Static build artifacts only"
 }

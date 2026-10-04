@@ -346,14 +346,15 @@
     let f = null, fi = -1;
     const cap = launch ? null : R.reentryAt(M, t);
     if (!launch) { const o = R.opsFrame(M, t); f = o.f; fi = o.i;
-      if (!S.task && cap) { scene.setPhase('return'); scene.updateReturn(cap, dt); }
+      if (!S.task && cap) { scene.setPhase('return'); scene.updateReturn(cap, dt, { snap: !!S.sceneSnap }); }
       else if (!S.task) { scene.setPhase('ops'); scene.setSolar(!!lastEvent(t, (e) => e.code === 'SOLAR') && t < X.tSep);
         const xs = R.expStates(M, t), me = xs.find((x) => x.id === SID);
-        scene.updateOps(o.view, o.states, f.gate.isolated || [], dt, { ret: R.returnState(M, t), cam: 'arm', exps: xs, saa: !!(me && me.saa),
+        scene.updateOps(o.view, o.states, f.gate.isolated || [], dt, { ret: R.returnState(M, t), snap: !!S.sceneSnap, cam: 'arm', exps: xs, saa: !!(me && me.saa),
           focusModule: me && me.glow ? MOD : null, dtm: S.playing ? dt * S.rate : 0 }); } }
     else if (!S.task) { const L = R.launchState(M, t); scene.setPhase('launch'); scene.updateLaunch(t > X.tTouch + 20 ? { upper: L.upper, sepAtt: L.sepAtt, sepAge: L.sepAge } : L, !!L.upper, dt); }
     if (doPanels) { $('ret-readout').hidden = !cap || !!S.task; if (cap && !S.task) set('ret-readout', R.reentryReadout(cap)); }
     if (S.task) stepTask(dt);
+    S.sceneSnap = false;
     $('track-fill').style.width = $('track-head').style.left = (R.t2x(M, t) * 100).toFixed(3) + '%';
     if (doPanels) { track.setAttribute('aria-valuenow', String(Math.round(t))); track.setAttribute('aria-valuetext', met(t)); panels(t, f, fi); S.lastPanels = now; S.dirty = false;
       const parked = t >= X.tArmPark; if (!S.busyAsk) $$('.tasks .btn').forEach((b) => { b.disabled = parked; });
@@ -376,7 +377,7 @@
     $('btn-play').setAttribute('aria-label', on ? 'Pause replay' : 'Play replay');
     $('btn-play').setAttribute('aria-pressed', String(on));
   }
-  function seek(t) { if (S.task) endTask('Task view closed'); S.t = clamp(t, T0, X.tEnd); auditN = delivN = -1; chartKey = rosKey = rateKey = wellKey = ''; S.dirty = true; if (S.speed === 'auto') S.rate = R.autoRate(M, S.t); }
+  function seek(t) { if (S.task) endTask('Task view closed'); S.t = clamp(t, T0, X.tEnd); auditN = delivN = -1; chartKey = rosKey = rateKey = wellKey = ''; S.dirty = true; S.sceneSnap = true; if (S.speed === 'auto') S.rate = R.autoRate(M, S.t); }
   $('btn-play').onclick = () => { if (!S.playing && S.t >= X.tEnd - 1) seek(T0); play(!S.playing); };
   $$('#speed button').forEach((b) => { b.onclick = () => { S.speed = b.dataset.speed === 'auto' ? 'auto' : +b.dataset.speed; $$('#speed button').forEach((x) => x.classList.toggle('on', x === b)); }; });
   $$('#right-tabs button').forEach((b) => { b.onclick = () => { $$('#right-tabs button').forEach((x) => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', String(x === b)); }); $$('#panel-right .tabpane').forEach((p) => { p.hidden = p.dataset.pane !== b.dataset.tab; }); rosKey = rateKey = wellKey = ''; S.dirty = true; }; });
