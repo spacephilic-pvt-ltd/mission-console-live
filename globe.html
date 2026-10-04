@@ -1,30 +1,33 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="build" content="research-20261004-r8" data-built="2026-10-04T12:24:38Z">
 <meta charset="utf-8">
+<meta name="build" content="catppuccin-20261004-r9" data-built="2026-10-04T13:05:20Z">
 <title>Earth & Ground Track · Space Philic</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#091219">
-<script src="static/theme-init.js?v=research-20261004-r8"></script>
+<script src="static/theme-init.js?v=catppuccin-20261004-r9"></script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link href="static/workspace.css?v=research-20261004-r8" rel="stylesheet">
-<script src="static/vendor/lucide.min.js?v=research-20261004-r8" defer></script>
-<script src="static/workspace.js?v=research-20261004-r8" defer></script>
+<link href="static/workspace.css?v=catppuccin-20261004-r9" rel="stylesheet">
+<script src="static/vendor/lucide.min.js?v=catppuccin-20261004-r9" defer></script>
+<script src="static/workspace.js?v=catppuccin-20261004-r9" defer></script>
 <script>window.CESIUM_BASE_URL = 'https://cdn.jsdelivr.net/npm/cesium@1.119.0/Build/Cesium/';</script>
 <script src="https://cdn.jsdelivr.net/npm/cesium@1.119.0/Build/Cesium/Cesium.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/cesium@1.119.0/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 <style>
-  :root { --gl-panel: rgba(248,251,255,.96); --gl-line: #c8d6e5; --gl-ink: #1b2d43; --gl-muted: #536b82; --gl-button: #e9f0f8; --gl-active: #dbece9; --gl-accent: #236f66; --gl-shadow: #06152325; }
-  html[data-theme="dark"] { --gl-panel: rgba(15,27,45,.95); --gl-line: #304762; --gl-ink: #e8f0fa; --gl-muted: #a8bbd0; --gl-button: #192c44; --gl-active: #173f3c; --gl-accent: #a2e8d9; --gl-shadow: #0005; }
+  :root { --gl-panel: color-mix(in srgb,var(--ctp-base) 96%,transparent); --gl-line: var(--ctp-surface1); --gl-ink: var(--ctp-text); --gl-muted: var(--ctp-subtext1); --gl-button: var(--ctp-mantle); --gl-active: color-mix(in srgb,var(--ctp-mauve) 12%,var(--ctp-base)); --gl-accent: var(--ctp-mauve); --gl-shadow: #11111b25; }
+  html[data-theme="dark"] { --gl-shadow: #11111b80; }
+  html[data-theme="light"] body[data-workspace="globe"] { --gl-accent:color-mix(in srgb,var(--ctp-mauve) 70%,var(--ctp-text)); }
   * { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; background: #091219; font-family: Inter, system-ui, sans-serif; color: #edf4f7; }
+  html, body { margin: 0; height: 100%; background: #11111b; font-family: Inter, system-ui, sans-serif; color: var(--ctp-mocha-text); }
   #globe-workspace { position: absolute; inset: 0 0 0 var(--ws-rail, 88px); overflow: hidden; }
   #cesiumContainer { position: absolute; inset: 0; }
   .globe-heading { position: absolute; left: 28px; top: 27px; z-index: 5; pointer-events: none; max-width: 460px; text-shadow: 0 2px 10px #000; }
-  .globe-eyebrow { display: block; color: #8ba7b9; font: 500 10px/1.5 'IBM Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; margin-bottom: 9px; }
+  .globe-eyebrow { display: block; color: var(--ctp-mocha-subtext1); font: 500 10px/1.5 'IBM Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; margin-bottom: 9px; }
   .globe-heading h1 { margin: 0 0 9px; font-size: clamp(24px, 3vw, 36px); font-weight: 500; letter-spacing: -.04em; }
-  .globe-heading p { margin: 0; color: #b6c7d3; font-size: 12px; line-height: 1.6; }
+  .globe-heading p { margin: 0; color: var(--ctp-mocha-subtext1); font-size: 12px; line-height: 1.6; }
+  .globe-heading .ws-header-brand { background:var(--gl-panel);border:1px solid var(--gl-line);border-radius:10px;padding:6px 10px;text-shadow:none; }
+  html[data-theme="light"] .globe-heading .ws-logo-lockup img { filter:invert(1);mix-blend-mode:multiply; }
   .globe-panel { background: var(--gl-panel); border: 1px solid var(--gl-line); border-radius: 13px; box-shadow: 0 12px 36px var(--gl-shadow); backdrop-filter: blur(14px); color: var(--gl-ink); }
   #globe-details { position: absolute; right: 26px; top: 28px; z-index: 6; max-width: 300px; padding: 13px 16px; font-size: 12px; color: var(--gl-muted); }
   #globe-details summary { cursor: pointer; font-weight: 600; color: var(--gl-ink); }
@@ -35,19 +38,19 @@
   .globe-controls-row + .globe-controls-row { margin-top: 13px; padding-top: 13px; border-top: 1px solid var(--gl-line); }
   .globe-control-label { color: var(--gl-muted); font: 10px 'IBM Plex Mono', monospace; letter-spacing: .08em; width: 50px; text-transform: uppercase; }
   #globe-controls button, #globe-controls select, #globe-error button { min-height: 36px; border: 1px solid var(--gl-line); border-radius: 7px; padding: 8px 12px; font: 500 11px Inter, system-ui, sans-serif; cursor: pointer; color: var(--gl-ink); background: var(--gl-button); }
-  #globe-controls button:hover, #globe-controls select:hover, #globe-error button:hover { border-color: #74cdbf; }
-  #globe-controls button[aria-pressed=true], #globe-controls #play { color: var(--gl-accent); border-color: #6baba0; background: var(--gl-active); }
+  #globe-controls button:hover, #globe-controls select:hover, #globe-error button:hover { border-color: var(--gl-accent); }
+  #globe-controls button[aria-pressed=true], #globe-controls #play { color: var(--gl-accent); border-color: var(--gl-accent); background: var(--gl-active); }
   #globe-controls button:disabled { opacity: .4; cursor: not-allowed; }
   #globe-controls .lucide { width: 15px; height: 15px; margin-right: 5px; }
-  :focus-visible { outline: 2px solid #91e5d2; outline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--gl-accent); outline-offset: 3px; }
   #globe-state { font: 11px/1.4 'IBM Plex Mono', monospace; color: var(--gl-muted); margin: 12px 0 0; }
   #globe-error { position: absolute; z-index: 10; top: 50%; left: 50%; transform: translate(-50%,-50%); padding: 28px; width: min(420px,calc(100% - 32px)); }
   #globe-error h2 { margin: 0 0 12px; font-size: 21px; font-weight: 500; }
   #globe-error p { color: var(--gl-muted); font-size: 13px; line-height: 1.7; }
   .cesium-viewer-toolbar { top: 145px; right: 26px; }
-  .cesium-viewer-timelineContainer { background: #0c1923; border-color: #2d424f; }
-  .cesium-viewer-bottom { color: #a8bfcc; background: #09121990; font-size: 9px; }
-  .cesium-infoBox { top: 145px; background: #0c1923; }
+  .cesium-viewer-timelineContainer { background: var(--gl-panel); border-color: var(--gl-line); color:var(--gl-ink); }
+  .cesium-viewer-bottom { color: var(--ctp-mocha-subtext1); background: #11111b90; font-size: 9px; }
+  .cesium-infoBox { top: 145px; background: var(--gl-panel); }
   @media(max-width:1100px) { .globe-heading { left: 20px; } #globe-details { top: 26px; right: 20px; max-width: 230px; } }
   @media(max-width:800px) { .globe-heading p { max-width: 290px; } #globe-details { top: 132px; right: 20px; max-width: 230px; } .cesium-viewer-toolbar { top: 190px; right: 20px; } }
   @media(max-width:720px) {

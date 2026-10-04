@@ -1,9 +1,9 @@
 {
-  "build": "research-20261004-r8",
-  "built_at": "2026-10-04T12:24:38Z",
+  "build": "catppuccin-20261004-r9",
+  "built_at": "2026-10-04T13:05:20Z",
   "sha": null,
   "source_git_sha": null,
   "source_kind": "local working-tree static export",
-  "content_snapshot_sha256": "57db79527a7a4fecc3a24f0f57169c11486b929d53aac23155615c369d80fa7c",
-  "publication_scope": "Static build artifacts only"
+  "publication_scope": "Static build artifacts only",
+  "content_snapshot_sha256": "7d9b75d0237a674b74bb6cd3e3843d0daae7f70859a78caaf864fe9157708188"
 }

@@ -9,6 +9,8 @@
     const theme = valid(value);
     document.documentElement.dataset.theme = theme;
     document.documentElement.style.colorScheme = theme;
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+    if (themeColor) themeColor.content = theme === 'dark' ? '#1e1e2e' : '#eff1f5';
     if (persist) { try { localStorage.setItem(key, theme); } catch (_) {} }
     window.dispatchEvent(new CustomEvent('workspace:theme', { detail: { theme } }));
     return theme;

@@ -8,4 +8,6 @@ Open `index.html` through a static web server. The laboratory workspace starts a
 
 Publish only the contents of this build directory. Keep `.nojekyll` when using GitHub Pages. The package contains no application source repository, private project documents, credentials, or development environment.
 
-Build: `research-20261004-r8`. `build.json` records the actual local artifact snapshot fingerprint; no source Git commit is asserted.
+Themes use Catppuccin Latte (light) and Mocha (dark), with the original MIT license retained in `static/catppuccin-LICENSE.txt`.
+
+Build: `catppuccin-20261004-r9`. `build.json` records the actual local artifact snapshot fingerprint; no source Git commit is asserted.

@@ -21,7 +21,7 @@
   renderer.domElement.setAttribute('role', 'img');
   renderer.domElement.setAttribute('aria-label', 'Interactive CAD model. Arrow keys rotate, plus and minus zoom, zero resets the view.');
   renderer.domElement.setAttribute('aria-describedby', 'cad-help');
-  const scene = new THREE.Scene(); scene.background = new THREE.Color(0xedf2fa);
+  const scene = new THREE.Scene(); scene.background = new THREE.Color();
   // Neutral studio reflections restore readable metals without changing the source CAD geometry or colours.
   const envCanvas = document.createElement('canvas'); envCanvas.width = 512; envCanvas.height = 256;
   const envContext = envCanvas.getContext('2d'), envGradient = envContext.createLinearGradient(0, 0, 0, 256);
@@ -39,8 +39,8 @@
   const key = new THREE.DirectionalLight(0xfff7ed, 1.65); key.position.set(4, 6, 5); scene.add(key);
   const fill = new THREE.DirectionalLight(0xc7e4f5, .65); fill.position.set(-5, 2, -4); scene.add(fill);
   const front = new THREE.DirectionalLight(0xffffff, .65); front.position.set(1, 2, -6); scene.add(front); // module fronts face -z
-  const grid = new THREE.GridHelper(6, 12, 0x466179, 0x24364a); scene.add(grid); // 0.5 m squares
-  const fine = new THREE.GridHelper(1, 20, 0x466179, 0x24364a); fine.visible = false; scene.add(fine); // 5 cm squares
+  const grid = new THREE.GridHelper(6, 12, 0xffffff, 0xffffff); scene.add(grid); // 0.5 m squares
+  const fine = new THREE.GridHelper(1, 20, 0xffffff, 0xffffff); fine.visible = false; scene.add(fine); // 5 cm squares
   [grid, fine].forEach(o => { o.material.transparent = true; o.material.opacity = .7; });
   const loader = new THREE.GLTFLoader();
   const satViews = (n, hasEntry) => [{ name: n, label: n.endsWith('-detail') ? 'Cutaway' : 'In orbit', kind: n.endsWith('-detail') ? 'detail' : 'sat' }]
@@ -51,12 +51,29 @@
   }
   let views = parsed(), cur = 0, model = null, dirty = true, marked = [], hl = '', framedAt = 0;
   let loadId = 0, frameId = 0, contextLost = false, onscreen = true, gridOn = true, disposed = false;
-  const markMat = new THREE.MeshStandardMaterial({ color: 0x4cc5c0, emissive: 0x073a3e, roughness: .5, metalness: .2 });
+  const markMat = new THREE.MeshStandardMaterial({ roughness: .5, metalness: .2 });
   const view = () => views[cur] || {};
   function applyTheme() {
     const dark = document.documentElement.dataset.theme === 'dark';
-    scene.background.setHex(dark ? 0x101b30 : 0xedf2fa);
-    [grid, fine].forEach(o => { o.material.color.setHex(dark ? 0x57708a : 0x6681a0); o.material.opacity = dark ? .72 : .4; });
+    const styles = getComputedStyle(el);
+    const color = (token, lightFallback, darkFallback) => new THREE.Color(styles.getPropertyValue(token).trim() || (dark ? darkFallback : lightFallback));
+    scene.background.copy(color('--ctp-base', '#eff1f5', '#1e1e2e'));
+    const major = color('--ctp-overlay0', '#9ca0b0', '#6c7086');
+    const minor = color('--ctp-surface1', '#bcc0cc', '#45475a');
+    [grid, fine].forEach(o => {
+      // GridHelper carries vertex colours; update those directly so old blue values
+      // cannot tint the selected palette. Every two vertices form one grid line.
+      const positions = o.geometry.attributes.position, colors = o.geometry.attributes.color;
+      for (let i = 0; i < positions.count; i += 2) {
+        const center = (Math.abs(positions.getX(i)) < 1e-6 && Math.abs(positions.getX(i + 1)) < 1e-6)
+          || (Math.abs(positions.getZ(i)) < 1e-6 && Math.abs(positions.getZ(i + 1)) < 1e-6);
+        const c = center ? major : minor;
+        colors.setXYZ(i, c.r, c.g, c.b); colors.setXYZ(i + 1, c.r, c.g, c.b);
+      }
+      colors.needsUpdate = true; o.material.color.setHex(0xffffff); o.material.opacity = .8;
+    });
+    markMat.color.copy(color('--ctp-mauve', '#8839ef', '#cba6f7'));
+    markMat.emissive.copy(markMat.color).multiplyScalar(.06);
     renderSoon();
   }
   window.addEventListener('workspace:theme', applyTheme);
