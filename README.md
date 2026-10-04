@@ -8,4 +8,4 @@ Open `index.html` through a static web server. The laboratory workspace starts a
 
 Publish only the contents of this build directory. Keep `.nojekyll` when using GitHub Pages. The package contains no application source repository, private project documents, credentials, or development environment.
 
-Build: `return-20261004-r3`. `build.json` records the actual local artifact snapshot fingerprint; no source Git commit is asserted.
+Build: `return-20261004-r4`. `build.json` records the actual local artifact snapshot fingerprint; no source Git commit is asserted.

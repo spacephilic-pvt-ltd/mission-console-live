@@ -176,8 +176,10 @@
   let opsStates = [], sparkKey = '';
   function panelOps(t, f, fi, capS) {
     const M = D(), p = f.platform, A = p.arm;
-    set('plat-mode', nice(p.mode)); set('mode-pill', nice(p.mode)); cls('mode-pill', 'chip');
-    set('p-alt', p.alt_km + ' km'); set('p-batt', p.battery + ' %'); set('p-labt', Number(p.lab_t).toFixed(1) + ' °C');
+    // END_OF_MISSION is the platform's return mode, not evidence that recovery has finished.
+    const displayMode = t >= M.x.tEom ? 'MISSION COMPLETE' : t >= M.x.tReturn ? 'PAYLOAD RETURN' : nice(p.mode);
+    set('plat-mode', displayMode); set('mode-pill', displayMode); cls('mode-pill', 'chip');
+    set('p-alt', (capS ? capS.alt_km.toFixed(capS.alt_km < 10 ? 2 : 1) : p.alt_km) + ' km'); set('p-batt', p.battery + ' %'); set('p-labt', Number(p.lab_t).toFixed(1) + ' °C');
     set('p-sun', p.eclipse ? 'ECLIPSE' : 'SUNLIT'); set('p-active', p.active_modules); set('p-isol', p.isolated.length ? p.isolated.join(', ') : 'none');
     // modules
     const tgt = lastEvent(t, (e) => e.data && e.data.final && e.data.final !== 'EXECUTE' && t - e.t < 25 && /^module-/.test(e.data.target || ''));
@@ -238,7 +240,7 @@
     if (S.follow.drawer) setTab('drawer', dLast ? 'stack' : 'ground', true);
     $('ret-readout').hidden = !capS; if (capS) set('ret-readout', R.reentryReadout(capS));
     if (capS) hud(t, R.reentryReadout(capS).split(' · ').slice(0, 2).join(' · '), R.reentryReadout(capS).split(' · ').slice(2).join(' · '), cap ? cap.text.slice(0, 90) : '');
-    else hud(t, nice(p.mode), A.busy ? `DEXTER-L · MODULE ${A.module} · ${A.step}` : `${p.active_modules} modules active · ${p.eclipse ? 'eclipse' : 'sunlit'}`, cap ? cap.text.slice(0, 90) : '');
+    else hud(t, displayMode, A.busy ? `DEXTER-L · MODULE ${A.module} · ${A.step}` : `${p.active_modules} modules active · ${p.eclipse ? 'eclipse' : 'sunlit'}`, cap ? cap.text.slice(0, 90) : '');
   }
   function panelModule(f, fi, t) {
     const m = f.modules[S.sel - 1]; if (!m) return; const pr = m.protocol || {}, st = moduleState(m), pay = m.payload || {};
