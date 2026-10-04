@@ -18,6 +18,29 @@
     ['earth','Earth','globe-2','globe.html','Earth and ground track']
   ];
   const icon = name => `<i data-lucide="${name}" aria-hidden="true"></i>`;
+  // Keep the supplied artwork intact; the CSS viewport trims its black margins.
+  const logoURL = new URL('brand/space-philic-logo.png', staticRoot).href;
+  const logoMarkup = () => `<span class="ws-logo-lockup"><img src="${logoURL}" alt="Space Philic" width="6000" height="3375" decoding="async"></span>`;
+  function brandLink(extraClass = '') {
+    const link = document.createElement('a');
+    link.className = `ws-header-brand ${extraClass}`.trim();
+    link.href = new URL('index.html', siteRoot).href;
+    link.setAttribute('aria-label', 'Space Philic mission control');
+    link.innerHTML = logoMarkup();
+    return link;
+  }
+  const consoleBrand = document.querySelector('#topbar .brand-main');
+  if (consoleBrand) consoleBrand.replaceChildren(brandLink());
+  const labBrand = document.querySelector('.top .brand');
+  if (labBrand) {
+    Array.from(labBrand.childNodes).filter(node => node.nodeType === 3).forEach(node => node.remove());
+    labBrand.insertAdjacentHTML('afterbegin', logoMarkup());
+    labBrand.classList.add('ws-header-brand');
+  }
+  const globeHeading = document.querySelector('.globe-heading');
+  if (globeHeading) globeHeading.prepend(brandLink('ws-brand-over-space'));
+  const loadingBrand = document.querySelector('.ld-brand');
+  if (loadingBrand) loadingBrand.innerHTML = logoMarkup();
   const rail = document.createElement('aside');
   rail.className = 'ws-rail';
   rail.setAttribute('aria-label','Space Philic workspaces');
@@ -81,4 +104,48 @@
   observer.observe(document.body,{childList:true,subtree:true});
   syncTheme();
   refresh();
+
+  // A bounded, first-arrival welcome. Mission loading never controls its lifetime.
+  function introduceBrand() {
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    // Explicit autoplay links should start immediately at the requested moment.
+    if (new URLSearchParams(location.search).get('play') === '1' || new URLSearchParams(location.hash.slice(1)).get('play') === '1') return;
+    const sessionKey = 'space-philic:brand-welcome:v1';
+    try {
+      if (sessionStorage.getItem(sessionKey)) return;
+      sessionStorage.setItem(sessionKey, 'seen');
+    } catch (_) { return; } // Avoid replaying a welcome when storage is unavailable.
+    if (motion.matches || typeof HTMLDialogElement === 'undefined') return;
+    const welcome = document.createElement('dialog');
+    if (typeof welcome.showModal !== 'function') return;
+    welcome.className = 'ws-brand-intro';
+    welcome.setAttribute('aria-label', 'Welcome to Space Philic');
+    welcome.innerHTML = `<div class="ws-intro-stars" aria-hidden="true"></div><div class="ws-intro-stage"><div class="ws-intro-orbit" aria-hidden="true"><i></i></div><div class="ws-intro-logo">${logoMarkup()}</div><p class="ws-intro-caption">MISSION DIGITAL TWIN</p></div><button type="button" class="ws-intro-skip" autofocus>Enter workspace <span aria-hidden="true">↗</span></button>`;
+    document.body.append(welcome);
+    let timer;
+    let closing = false;
+    const cleanup = () => {
+      window.clearTimeout(timer);
+      motion.removeEventListener('change', onMotionChange);
+      welcome.remove();
+    };
+    const finish = (immediate = false) => {
+      if (closing && !immediate) return;
+      closing = true;
+      window.clearTimeout(timer);
+      if (immediate) { welcome.close(); cleanup(); return; }
+      welcome.classList.add('ws-intro-leaving');
+      timer = window.setTimeout(() => { welcome.close(); cleanup(); }, 220);
+    };
+    const onMotionChange = event => { if (event.matches) finish(true); };
+    welcome.querySelector('button').addEventListener('click', () => finish(true));
+    welcome.addEventListener('cancel', event => { event.preventDefault(); finish(true); });
+    welcome.addEventListener('keydown', event => event.stopPropagation());
+    welcome.addEventListener('close', cleanup, { once: true });
+    motion.addEventListener('change', onMotionChange);
+    try { welcome.showModal(); }
+    catch (_) { cleanup(); return; }
+    timer = window.setTimeout(() => finish(), 1800);
+  }
+  introduceBrand();
 })();
