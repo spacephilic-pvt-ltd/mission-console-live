@@ -1,9 +1,9 @@
 {
-  "build": "return-20261004-r4",
-  "built_at": "2026-10-04T10:59:34Z",
+  "build": "royal-20261004-r5",
+  "built_at": "2026-10-04T11:15:05Z",
   "sha": null,
   "source_git_sha": null,
   "source_kind": "local working-tree static export",
-  "content_snapshot_sha256": "17ce8bc80226eefb6da1b26e892cd1dea1f26d155dba185bbf3cb88082b39ca3",
+  "content_snapshot_sha256": "4bbb0fe86681ee9e54b11c25a072b701e99dd9019b4e48f7e754e84c67eba74d",
   "publication_scope": "Static build artifacts only"
 }

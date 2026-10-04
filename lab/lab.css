@@ -672,32 +672,32 @@ body[data-lab-page="configure"] > .top, body[data-lab-page="simulate"] > .top { 
 /* Shared light/dark color system. Layout and scientific values are theme-independent. */
 :root, html[data-theme="light"] {
   color-scheme: light;
-  --bg: #f4f9fd; --paper: #ffffff; --ink: #14334b; --ink-2: #425f73; --ink-3: #536f82;
-  --line: #d6e5ee; --line-2: #bcd0dd; --brand: #ffffff; --accent: #0866bc; --accent-ink: #00558c;
+  --bg: #f5f5fa; --paper: #ffffff; --ink: #1b2035; --ink-2: #444d66; --ink-3: #596177;
+  --line: #dfe2ef; --line-2: #bec4dc; --brand: #ffffff; --accent: #4338ca; --accent-ink: #3730a3;
   --good: #187a69; --good-bg: #e1f5ed; --warn: #855c12; --warn-bg: #fbf1d9;
   --bad: #b43851; --bad-bg: #fce8ec; --info: #0066a4; --info-bg: #e5f2fb;
-  --lab-surface: rgba(255,255,255,.96); --lab-raised: #ffffff; --lab-soft: #f0f7fb; --lab-soft-hover: #e8f3f9;
-  --lab-selected: #eaf5fc; --lab-selected-line: #add3eb; --lab-quiet-accent: #e2f2fb;
-  --lab-aqua: #087d93; --lab-aqua-ink: #086c80; --lab-gradient-a: rgba(112,196,232,.16); --lab-gradient-b: rgba(136,210,212,.065);
-  --lab-primary-ink: #ffffff; --lab-primary-hover: #00558c; --lab-primary-end: #0877b4;
-  --lab-shadow: 0 4px 18px rgba(22,77,110,.045); --lab-shadow-hover: 0 8px 24px rgba(22,77,110,.09);
-  --lab-map-ocean: #e3f1f9; --lab-map-land: #bdced9; --lab-map-edge: #8ba7bd; --lab-map-grid: #a2b7cb;
-  --lab-map-label: #3f5870; --lab-map-night: #1e3055; --lab-chart-grid: #dbe4ef;
+  --lab-surface: rgba(255,255,255,.96); --lab-raised: #ffffff; --lab-soft: #f1f2f8; --lab-soft-hover: #ebedf6;
+  --lab-selected: #eeecfb; --lab-selected-line: #b7a9e2; --lab-quiet-accent: #edebfa;
+  --lab-aqua: #0e7490; --lab-aqua-ink: #155e75; --lab-gradient-a: rgba(87,53,202,.055); --lab-gradient-b: rgba(15,118,110,.025);
+  --lab-primary-ink: #ffffff; --lab-primary-hover: #3730a3; --lab-primary-end: #6d28d9;
+  --lab-shadow: 0 4px 18px rgba(29,26,70,.045); --lab-shadow-hover: 0 8px 24px rgba(29,26,70,.09);
+  --lab-map-ocean: #edf0f7; --lab-map-land: #c6cbd8; --lab-map-edge: #909bb7; --lab-map-grid: #adbad1;
+  --lab-map-label: #49546f; --lab-map-night: #202846; --lab-chart-grid: #dfe2ef;
   --lab-schematic-metal: #dbe3eb; --lab-schematic-edge: #70859a;
 }
 html[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0d1b2d; --paper: #15283d; --ink: #edf6ff; --ink-2: #b8cddd; --ink-3: #96afc4;
-  --line: #2a4258; --line-2: #425f7b; --brand: #15283d; --accent: #79c7f2; --accent-ink: #a1dcff;
+  --bg: #090d1a; --paper: #101626; --ink: #e9edf9; --ink-2: #c5cce0; --ink-3: #acb5cf;
+  --line: #2b3450; --line-2: #475272; --brand: #101626; --accent: #a5b4fc; --accent-ink: #c4b5fd;
   --good: #83ddc2; --good-bg: #203f43; --warn: #f4cf8d; --warn-bg: #3e3541;
   --bad: #ffaabb; --bad-bg: #482b47; --info: #a1ceff; --info-bg: #263d60;
-  --lab-surface: rgba(21,40,61,.96); --lab-raised: #1b324b; --lab-soft: #13263b; --lab-soft-hover: #24425c;
-  --lab-selected: #1b3e59; --lab-selected-line: #4d7f9f; --lab-quiet-accent: #21465f;
-  --lab-aqua: #74d4d6; --lab-aqua-ink: #88dcdf; --lab-gradient-a: rgba(63,146,196,.12); --lab-gradient-b: rgba(46,143,166,.045);
-  --lab-primary-ink: #0e2d45; --lab-primary-hover: #b7e5ff; --lab-primary-end: #98d6f9;
-  --lab-shadow: 0 5px 22px rgba(3,15,29,.14); --lab-shadow-hover: 0 9px 26px rgba(3,15,29,.2);
-  --lab-map-ocean: #152840; --lab-map-land: #365775; --lab-map-edge: #6687a3; --lab-map-grid: #53708d;
-  --lab-map-label: #c7d5eb; --lab-map-night: #081630; --lab-chart-grid: #2c415d;
+  --lab-surface: rgba(16,22,38,.96); --lab-raised: #151b2d; --lab-soft: #11182a; --lab-soft-hover: #202941;
+  --lab-selected: #262244; --lab-selected-line: #625a8b; --lab-quiet-accent: #282542;
+  --lab-aqua: #67e8f9; --lab-aqua-ink: #67e8f9; --lab-gradient-a: rgba(87,53,202,.09); --lab-gradient-b: rgba(15,118,110,.035);
+  --lab-primary-ink: #ffffff; --lab-primary-hover: #3730a3; --lab-primary-end: #6d28d9;
+  --lab-shadow: 0 5px 22px rgba(2,4,14,.2); --lab-shadow-hover: 0 9px 26px rgba(2,4,14,.28);
+  --lab-map-ocean: #121c32; --lab-map-land: #35415e; --lab-map-edge: #697696; --lab-map-grid: #505f7d;
+  --lab-map-label: #c7d0e7; --lab-map-night: #070b18; --lab-chart-grid: #2b3450;
   --lab-schematic-metal: #768fa7; --lab-schematic-edge: #b7c9df;
 }
 body[data-workspace="lab"] {
@@ -838,7 +838,7 @@ body[data-workspace="lab"] {
 .satdraw .dim line { stroke: var(--ink-3); }
 .satdraw .cl { color: var(--ink-2); }
 .satdraw .bus { fill: var(--lab-schematic-metal); stroke: var(--lab-schematic-edge); }
-.satdraw .bub circle { fill: var(--accent); }
+.satdraw .bub circle { fill: #4338ca; }
 .satdraw .bub text { fill: var(--lab-primary-ink); }
 .sim-recovery-review { padding: 12px 14px; margin: 0 0 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--lab-soft); }
 .sim-recovery-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
@@ -865,17 +865,17 @@ body[data-workspace="lab"] {
 @media (max-height: 650px) { .sim-stage.is-expanded .sim-recovery-help, .sim-stage.is-expanded #sim-viewnote { display: none; } .sim-stage.is-expanded .sim-recovery-review { padding-top: 8px; padding-bottom: 8px; } .sim-stage.is-expanded .sim-caption span { max-height: 2.8em; overflow: auto; } .sim-stage.is-expanded .sim-caption b { font-size: 14px; } .sim-stage.is-expanded .sim-recovery-jumps { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @media (max-width: 540px) { .sim-recovery-heading { align-items: flex-start; flex-direction: column; gap: 5px; } .sim-recovery-review { padding: 11px; } .sim-recovery-jumps { grid-template-columns: repeat(2, minmax(0, 1fr)); } .sim-recovery-jumps button { min-height: 39px; } }
 
-/* Ocean-white refinement: quiet surfaces, a single primary blue and clear sections. */
+/* Quiet surfaces keep the royal primary and selected controls prominent. */
 body[data-workspace="lab"] .kicker { color: var(--accent-ink); }
 body[data-workspace="lab"] .hero > h1 { max-width: 25ch; text-wrap: balance; }
 body[data-workspace="lab"] .hero > .lede { max-width: 78ch; }
-.btn { min-height: 44px; border-radius: 9px; background: linear-gradient(120deg, var(--accent), var(--lab-primary-end)); box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 17%, transparent); }
+.btn { min-height: 44px; border-radius: 9px; background: var(--gradient-mission, linear-gradient(135deg, #4338ca, #5735ca 52%, #6d28d9)); box-shadow: 0 4px 12px rgba(67,56,202,.17); }
 .btn:hover { background: var(--lab-primary-hover); box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 22%, transparent); }
 .btn.ghost { box-shadow: none; }
 .btn:disabled { box-shadow: none; }
 .btn:active:enabled { box-shadow: none; }
 .card, .facts div, .ff, .flow li, .ref-flight, .gallery figure, .mode, .xcard, .cad-view { border-radius: 13px; }
-.facts div { background: linear-gradient(145deg, var(--lab-raised) 40%, var(--lab-soft)); }
+.facts div { background: var(--lab-raised); }
 .facts b { color: var(--accent-ink); font-weight: 600; }
 .facts span { letter-spacing: .07em; }
 .flow { gap: 14px; }
@@ -885,7 +885,7 @@ body[data-workspace="lab"] .hero > .lede { max-width: 78ch; }
 .xcard h3 { font-weight: 600; }
 .xcard:hover, .mode:hover { box-shadow: var(--lab-shadow-hover); }
 .xcard.pick.on, .mode.on { background: linear-gradient(130deg, var(--lab-selected), var(--lab-raised)); box-shadow: 0 0 0 1px var(--accent), var(--lab-shadow); }
-.section-icon, .exp-icon { background: linear-gradient(145deg, var(--lab-quiet-accent), var(--lab-raised)); }
+.section-icon, .exp-icon { background: var(--lab-quiet-accent); }
 .exp-icon { border-color: var(--lab-selected-line); }
 .cfg-stepnav { border-radius: 12px; background: var(--lab-surface); box-shadow: var(--lab-shadow); }
 .cfg-steps { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
@@ -895,7 +895,7 @@ body[data-workspace="lab"] .hero > .lede { max-width: 78ch; }
 .cfg-steps li small { font-size: 9px; }
 .cfg-steps button { min-height: 72px; }
 .cfg-steps button:focus-visible { outline-offset: -4px; border-radius: 10px; }
-.cfg-sum { border-top: 3px solid var(--accent); background: linear-gradient(155deg, var(--lab-raised) 38%, var(--lab-soft)); }
+.cfg-sum { border-top: 3px solid var(--accent); background: var(--lab-raised); }
 .summary-platform { border-radius: 6px; }
 .cfg-sum dd { font-weight: 500; }
 .lab-status { background: var(--lab-surface); border: 1px solid var(--line); border-radius: 20px; padding: 5px 9px; }
@@ -905,8 +905,8 @@ body[data-workspace="lab"] .hero > .lede { max-width: 78ch; }
 .lab-disclosure > summary { min-height: 56px; }
 .lab-disclosure > summary:hover { color: var(--accent-ink); }
 .loaded { border-radius: 13px; }
-.sim-cta { border-radius: 12px; }
-.start a { background: linear-gradient(110deg, var(--accent), var(--lab-primary-end)); box-shadow: var(--lab-shadow); padding: 20px 24px; border-radius: 13px; }
+.sim-cta { border-radius: 12px; background: var(--lab-raised); }
+.start a { background: var(--gradient-mission, linear-gradient(135deg, #4338ca, #5735ca 52%, #6d28d9)); box-shadow: var(--lab-shadow); padding: 20px 24px; border-radius: 13px; }
 .start a:hover { background: var(--lab-primary-hover); }
 .tbl { background: var(--lab-raised); }
 .tbl th { background: var(--lab-soft); color: var(--ink-2); }
@@ -914,17 +914,17 @@ body[data-workspace="lab"] .hero > .lede { max-width: 78ch; }
 .tbl td { line-height: 1.6; }
 .scroll { border-radius: 11px; }
 .pager a { border-radius: 10px; box-shadow: var(--lab-shadow); }
-.sim-ready .card { background: linear-gradient(120deg, var(--lab-raised), var(--lab-soft)); }
+.sim-ready .card { background: var(--lab-raised); }
 .sim-stage { border-radius: 14px; box-shadow: var(--lab-shadow); }
-.sim-side > .card { background: linear-gradient(155deg, var(--lab-raised), var(--lab-soft)); }
-.sim-recovery-review { border-radius: 10px; background: linear-gradient(110deg, var(--lab-soft), var(--lab-surface)); }
+.sim-side > .card { background: var(--lab-raised); }
+.sim-recovery-review { border-radius: 10px; background: var(--lab-soft); }
 .seg { border-radius: 9px; }
 .seg button { border-radius: 6px; }
 .seg button.on { background: var(--lab-raised); border-color: var(--lab-selected-line); box-shadow: 0 1px 4px color-mix(in srgb, var(--accent) 8%, transparent); }
 .sim-recovery-jumps button.on { background: var(--accent); border-color: var(--accent); color: var(--lab-primary-ink); }
 .sim-scene-actions .btn { min-height: 40px; }
 .sim-c { border: 1px solid var(--line); border-radius: 10px; }
-.cad-bar { background: linear-gradient(120deg, var(--lab-raised), var(--lab-soft)); }
+.cad-bar { background: var(--lab-soft); }
 body[data-workspace="lab"]:not([data-lab-page="configure"]):not([data-lab-page="simulate"]) main.wrap > section:not(.hero):not(.start) { border-top: 1px solid var(--line); padding-top: 26px; margin-top: 32px; }
 body[data-lab-page="experiments"] .cols > div > section + section { border-top: 1px solid var(--line); padding-top: 24px; margin-top: 30px; }
 @media (max-width: 720px) {
@@ -937,30 +937,30 @@ body[data-lab-page="experiments"] .cols > div > section + section { border-top: 
 }
 /* Tool colors identify actions, never scientific pass/warning/error states. */
 :root, html[data-theme="light"] {
-  --tool-config: #7046b8; --tool-config-hover: #5b339c;
-  --tool-play: #a64c13; --tool-play-hover: #893c0c; --tool-button-ink: #fff;
-  --tool-science: #087867; --tool-spacecraft: #4e5eb5; --tool-payload: #08778a; --tool-sim: #087393;
+  --tool-config: #6d28d9; --tool-config-hover: #5b21b6;
+  --tool-play: #4338ca; --tool-play-hover: #3730a3; --tool-button-ink: #fff;
+  --tool-science: #0f766e; --tool-spacecraft: #3730a3; --tool-payload: #9d174d; --tool-sim: #0e7490;
 }
 html[data-theme="dark"] {
-  --tool-config: #c7b0fa; --tool-config-hover: #d9c9ff;
-  --tool-play: #ffc08b; --tool-play-hover: #ffd5b1; --tool-button-ink: #122a3d;
-  --tool-science: #80dbc7; --tool-spacecraft: #b5bdfa; --tool-payload: #83d9dc; --tool-sim: #87d5ee;
+  --tool-config: #c4b5fd; --tool-config-hover: #5b21b6;
+  --tool-play: #a5b4fc; --tool-play-hover: #3730a3; --tool-button-ink: #fff;
+  --tool-science: #5eead4; --tool-spacecraft: #b7b1ff; --tool-payload: #f0a6cd; --tool-sim: #67e8f9;
 }
-.cfg-steps li[data-step="1"], .cfg-step[data-step="1"] .section-icon, .summary-platform .lucide, .cad-bar { --control-accent: var(--tool-spacecraft); }
-.cfg-steps li[data-step="2"], .cfg-step[data-step="2"] .section-icon, .exp-icon { --control-accent: var(--tool-science); }
-.cfg-steps li[data-step="3"], .cfg-step[data-step="3"] .section-icon { --control-accent: var(--tool-payload); }
-.cfg-steps li[data-step="4"], .cfg-step[data-step="4"] .section-icon, .summary-heading .section-icon { --control-accent: var(--tool-config); }
+.cfg-steps li[data-step="1"], .cfg-step[data-step="1"] .section-icon, .summary-platform .lucide, .cad-bar { --control-accent: var(--tool-spacecraft); --control-gradient: var(--gradient-spacecraft, linear-gradient(135deg, #3730a3, #4f46e5)); }
+.cfg-steps li[data-step="2"], .cfg-step[data-step="2"] .section-icon, .exp-icon { --control-accent: var(--tool-science); --control-gradient: var(--gradient-research, linear-gradient(135deg, #0f766e, #115e59)); }
+.cfg-steps li[data-step="3"], .cfg-step[data-step="3"] .section-icon { --control-accent: var(--tool-payload); --control-gradient: var(--gradient-payload, linear-gradient(135deg, #9d174d, #7e22ce)); }
+.cfg-steps li[data-step="4"], .cfg-step[data-step="4"] .section-icon, .summary-heading .section-icon { --control-accent: var(--tool-config); --control-gradient: var(--gradient-configure, linear-gradient(135deg, #6d28d9, #9333ea)); }
 .cfg-steps li b, .cfg-step .section-icon, .summary-heading .section-icon, .exp-icon {
   color: var(--control-accent); background: color-mix(in srgb, var(--control-accent) 11%, var(--lab-raised));
   border-color: color-mix(in srgb, var(--control-accent) 25%, var(--line));
 }
 .cfg-steps li.on { background: color-mix(in srgb, var(--control-accent) 7%, var(--lab-raised)); }
 .cfg-steps li.on::after { background: var(--control-accent); }
-.cfg-steps li.on b { background: var(--control-accent); color: var(--tool-button-ink); }
+.cfg-steps li.on b { background: var(--control-gradient); color: var(--tool-button-ink); }
 .cfg-steps li.done b { color: var(--control-accent); background: color-mix(in srgb, var(--control-accent) 14%, var(--lab-raised)); }
 .cfg-steps button:hover:enabled { background: color-mix(in srgb, var(--control-accent) 9%, var(--lab-raised)); }
 .cfg-steps button:focus-visible { outline-color: var(--control-accent); }
-.cfg-nav #cfg-next { background: var(--tool-config); color: var(--tool-button-ink); box-shadow: 0 4px 12px color-mix(in srgb, var(--tool-config) 17%, transparent); }
+.cfg-nav #cfg-next { background: var(--gradient-configure, linear-gradient(135deg, #6d28d9, #9333ea)); color: var(--tool-button-ink); box-shadow: 0 4px 12px rgba(109,40,217,.17); }
 .cfg-nav #cfg-next:hover:enabled { background: var(--tool-config-hover); }
 .cfg-nav #cfg-next:focus-visible, #sim-back:focus-visible { outline-color: var(--tool-config); }
 .cfg-sum { border-top-color: var(--tool-config); }
@@ -968,7 +968,7 @@ html[data-theme="dark"] {
 .summary-platform .lucide, .mode-top > .lucide { color: var(--tool-spacecraft); }
 .mode:hover, .mode.on { border-color: var(--tool-spacecraft); }
 .mode.on { box-shadow: 0 0 0 1px var(--tool-spacecraft), var(--lab-shadow); background: linear-gradient(130deg, color-mix(in srgb, var(--tool-spacecraft) 9%, var(--lab-raised)), var(--lab-raised)); }
-.mode.on .mode-check { background: var(--tool-spacecraft); border-color: var(--tool-spacecraft); color: var(--tool-button-ink); }
+.mode.on .mode-check { background: var(--gradient-spacecraft, linear-gradient(135deg, #3730a3, #4f46e5)); border-color: var(--tool-spacecraft); color: var(--tool-button-ink); }
 .mode:focus-within { outline-color: var(--tool-spacecraft); }
 .xcard:hover, .xcard.pick.on { border-color: var(--tool-science); }
 .xcard:hover { background: color-mix(in srgb, var(--tool-science) 4%, var(--lab-raised)); }
@@ -978,31 +978,31 @@ html[data-theme="dark"] {
 .experiment-search:focus-within { border-color: var(--tool-science); box-shadow: 0 0 0 1px var(--tool-science); }
 .preparation-brief .lucide, .guide-h .lucide { color: var(--tool-payload); }
 #sim-play, #sim-scene-play, .cfg-sum a.btn[href^="simulate"], .sim-cta > .btn {
-  background: var(--tool-play); color: var(--tool-button-ink); border-color: var(--tool-play);
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--tool-play) 16%, transparent);
+  background: var(--gradient-mission, linear-gradient(135deg, #4338ca, #5735ca 52%, #6d28d9)); color: var(--tool-button-ink); border-color: #4338ca;
+  box-shadow: 0 4px 12px rgba(67,56,202,.16);
 }
 #sim-play:hover:enabled, #sim-scene-play:hover:enabled, .cfg-sum a.btn[href^="simulate"]:hover, .sim-cta > .btn:hover {
   background: var(--tool-play-hover); border-color: var(--tool-play-hover); color: var(--tool-button-ink);
 }
 #sim-play:focus-visible, #sim-scene-play:focus-visible, .cfg-sum a.btn[href^="simulate"]:focus-visible, .sim-cta > .btn:focus-visible { outline-color: var(--tool-play); }
 #sim-play:disabled, #sim-scene-play:disabled { box-shadow: none; }
-#sim-tabs, #sim-speed, .sim-inspector-tabs, .sim-recovery-review { --control-accent: var(--tool-sim); }
-#sim-tabs button[data-v="ascent"], .sim-recovery-jumps button[data-recovery="burn"], .sim-recovery-jumps button[data-recovery="entry"] { --control-accent: var(--tool-play); }
-#sim-tabs button[data-v="map"] { --control-accent: var(--accent); }
-#sim-tabs button[data-v="3d"], .sim-inspector-tabs button[data-panel="cad"] { --control-accent: var(--tool-spacecraft); }
-.sim-inspector-tabs button[data-panel="events"] { --control-accent: var(--tool-config); }
-.sim-recovery-jumps button[data-recovery="deployment"] { --control-accent: var(--tool-config); }
-.sim-recovery-jumps button[data-recovery="recovered"] { --control-accent: var(--tool-payload); }
+#sim-tabs, #sim-speed, .sim-inspector-tabs, .sim-recovery-review { --control-accent: var(--tool-sim); --control-gradient: var(--gradient-simulate, linear-gradient(135deg, #0e7490, #155e75)); }
+#sim-tabs button[data-v="ascent"], .sim-recovery-jumps button[data-recovery="burn"], .sim-recovery-jumps button[data-recovery="entry"] { --control-accent: var(--tool-play); --control-gradient: var(--gradient-mission, linear-gradient(135deg, #4338ca, #5735ca 52%, #6d28d9)); }
+#sim-tabs button[data-v="map"] { --control-accent: var(--accent-earth, #1d4ed8); --control-gradient: var(--gradient-earth, linear-gradient(135deg, #1d4ed8, #0369a1)); }
+#sim-tabs button[data-v="3d"], .sim-inspector-tabs button[data-panel="cad"] { --control-accent: var(--tool-spacecraft); --control-gradient: var(--gradient-spacecraft, linear-gradient(135deg, #3730a3, #4f46e5)); }
+.sim-inspector-tabs button[data-panel="events"] { --control-accent: var(--tool-config); --control-gradient: var(--gradient-configure, linear-gradient(135deg, #6d28d9, #9333ea)); }
+.sim-recovery-jumps button[data-recovery="deployment"] { --control-accent: var(--tool-config); --control-gradient: var(--gradient-configure, linear-gradient(135deg, #6d28d9, #9333ea)); }
+.sim-recovery-jumps button[data-recovery="recovered"] { --control-accent: var(--tool-payload); --control-gradient: var(--gradient-payload, linear-gradient(135deg, #9d174d, #7e22ce)); }
 #sim-tabs button .lucide, .sim-inspector-tabs button .lucide, .sim-recovery-jumps button .lucide { color: var(--control-accent); }
 #sim-tabs button:hover, #sim-speed button:hover, .sim-inspector-tabs button:hover, .sim-recovery-jumps button:hover:enabled, .cad-bar .seg button:hover {
   background: color-mix(in srgb, var(--control-accent) 10%, var(--lab-raised)); border-color: color-mix(in srgb, var(--control-accent) 34%, var(--line));
 }
 #sim-tabs button.on, #sim-speed button.on, .sim-inspector-tabs button.on, .cad-bar .seg button.on {
-  color: var(--control-accent); background: color-mix(in srgb, var(--control-accent) 11%, var(--lab-raised)); border-color: color-mix(in srgb, var(--control-accent) 48%, var(--line));
+  color: #fff; background: var(--control-gradient); border-color: color-mix(in srgb, var(--control-accent) 48%, var(--line));
 }
 #sim-tabs button:focus-visible, #sim-speed button:focus-visible, .sim-inspector-tabs button:focus-visible, .sim-recovery-jumps button:focus-visible, .cad-bar .seg button:focus-visible { outline-color: var(--control-accent); }
-.sim-recovery-jumps button.on, .sim-recovery-jumps button.on:hover:enabled { background: var(--control-accent); border-color: var(--control-accent); color: var(--tool-button-ink); }
-.sim-recovery-jumps button.on .lucide { color: inherit; }
+.sim-recovery-jumps button.on, .sim-recovery-jumps button.on:hover:enabled { background: var(--control-gradient); border-color: var(--control-accent); color: var(--tool-button-ink); }
+#sim-tabs button.on .lucide, .sim-inspector-tabs button.on .lucide, .sim-recovery-jumps button.on .lucide { color: inherit; }
 body[data-lab-page="simulate"] .sim-title .kicker .lucide, .sim-recovery-heading .kicker .lucide { color: var(--tool-sim); }
 .sim-detail .lucide-clipboard-list { color: var(--tool-payload); }
 .sim-detail .lucide-chart-no-axes-combined { color: var(--tool-science); }
@@ -1011,6 +1011,6 @@ body[data-lab-page="simulate"] .sim-title .kicker .lucide, .sim-recovery-heading
 @media (min-width: 1400px) { .sim-recovery-jumps { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
 @media (max-width: 720px) { .sim-recovery-jumps, .sim-stage.is-expanded .sim-recovery-jumps { grid-template-columns: repeat(3, minmax(0, 1fr)); } .sim-recovery-jumps button { min-height: 44px; gap: 4px; padding: 6px; font-size: 9px; } .sim-recovery-jumps button .lucide { width: 12px; height: 12px; } }
 @media print {
-  html[data-theme] { --bg:#fff; --paper:#fff; --lab-surface:#fff; --lab-raised:#fff; --lab-soft:#f4f9fd; --ink:#14334b; --ink-2:#425f73; --ink-3:#536f82; --line:#d6e5ee; --accent:#0866bc; --accent-ink:#00558c; --lab-shadow:none; }
+  html[data-theme] { --bg:#fff; --paper:#fff; --lab-surface:#fff; --lab-raised:#fff; --lab-soft:#f1f2f8; --ink:#1b2035; --ink-2:#444d66; --ink-3:#596177; --line:#dfe2ef; --accent:#4338ca; --accent-ink:#3730a3; --lab-shadow:none; }
   body[data-workspace="lab"] { background:#fff; }
 }

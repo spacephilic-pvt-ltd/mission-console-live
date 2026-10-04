@@ -222,7 +222,7 @@ html[data-theme] body[data-workspace="customer"] .v-ack .btn {color:var(--warn-i
 html[data-theme] body[data-workspace="customer"] .env-note,
 html[data-theme] body[data-workspace="customer"] .note.compare {color:var(--ink-2);}
 
-/* Payload controls share the same ocean palette and material hierarchy as Mission. */
+/* Payload controls share the same palette and material hierarchy as Mission. */
 html[data-theme] body[data-workspace="customer"] :is(#cust-switch,.ctl-req select) {border-radius:9px;box-shadow:0 1px 3px rgba(20,59,84,.035);font-size:11px;padding:9px 11px;}
 html[data-theme] body[data-workspace="customer"] :is(#cust-switch,.ctl-req select):hover {border-color:var(--s1);}
 html[data-theme] body[data-workspace="customer"] .tasks .btn {border-radius:9px;font-size:10px;font-weight:600;line-height:1.35;background:var(--theme-selected);color:var(--s1);}
@@ -242,9 +242,9 @@ html[data-theme] body[data-workspace="customer"] :is(.deliveries,.audit,.return)
 html[data-theme] body[data-workspace="customer"] .vials {background:linear-gradient(135deg,var(--surface),var(--theme-chart));}
 
 /* Distinguish customer views; controls retain their explicit safety states. */
-html[data-theme] body[data-workspace="customer"] .focus-tabs button[data-focus="overview"]{--view-accent:var(--accent-payload)}
-html[data-theme] body[data-workspace="customer"] .focus-tabs button[data-focus="controls"]{--view-accent:var(--accent-earth)}
-html[data-theme] body[data-workspace="customer"] .focus-tabs button[data-focus="results"]{--view-accent:var(--accent-configure)}
+html[data-theme] body[data-workspace="customer"] .focus-tabs button[data-focus="overview"]{--view-accent:var(--accent-payload);--view-gradient:var(--gradient-payload)}
+html[data-theme] body[data-workspace="customer"] .focus-tabs button[data-focus="controls"]{--view-accent:var(--accent-earth);--view-gradient:var(--gradient-earth)}
+html[data-theme] body[data-workspace="customer"] .focus-tabs button[data-focus="results"]{--view-accent:var(--accent-configure);--view-gradient:var(--gradient-configure)}
 html[data-theme] body[data-workspace="customer"] .title-dot,html[data-theme] body[data-workspace="customer"] #panel-sample .section-icon{color:var(--accent-payload)}
 html[data-theme] body[data-workspace="customer"] #panel-right .section-icon{color:var(--accent-research)}
 html[data-theme] body[data-workspace="customer"] #right-tabs button:not(.on) svg{color:var(--accent-configure)}

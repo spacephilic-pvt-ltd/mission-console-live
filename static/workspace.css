@@ -1,18 +1,25 @@
 /* Shared navigation and appearance. Lucide icons are bundled locally. */
 :root {
-  --ws-rail:88px; --ws-bg:#f4f9fd; --ws-surface:#ffffff;
-  --ws-line:#d6e5ee; --ws-accent:#0866bc; --ws-text:#15354d; --ws-muted:#536f82;
-  --ws-hover:#f0f7fc; --ws-active:#e4f2fc; --ws-active-text:#00558c;
-  --ws-glass:rgba(255,255,255,.96); --ws-shadow:0 18px 50px rgba(24,84,122,.12);
-  --ws-primary:linear-gradient(135deg,#0866bc,#087aab); --ws-primary-ink:#fff;
+  --ws-rail:88px; --ws-bg:#f5f5fa; --ws-surface:#ffffff;
+  --ws-line:#dfe2ef; --ws-accent:#4338ca; --ws-text:#1b2035; --ws-muted:#596177;
+  --ws-hover:#f0effa; --ws-active:#eeebff; --ws-active-text:#4338ca;
+  --ws-glass:rgba(255,255,255,.96); --ws-shadow:0 18px 50px rgba(30,24,74,.12);
+  --gradient-mission:linear-gradient(135deg,#4338ca 0%,#5735ca 52%,#6d28d9 100%);
+  --gradient-configure:linear-gradient(135deg,#6d28d9,#9333ea);
+  --gradient-simulate:linear-gradient(135deg,#0e7490,#155e75);
+  --gradient-research:linear-gradient(135deg,#0f766e,#115e59);
+  --gradient-spacecraft:linear-gradient(135deg,#3730a3,#4f46e5);
+  --gradient-payload:linear-gradient(135deg,#9d174d,#7e22ce);
+  --gradient-earth:linear-gradient(135deg,#1d4ed8,#0369a1);
+  --ws-primary:var(--gradient-mission); --ws-primary-ink:#fff;
   --ws-ease:cubic-bezier(.2,.8,.2,1);
 }
 html[data-theme="dark"] {
-  --ws-bg:#0e1d2d; --ws-surface:#152a3e; --ws-line:#2b465e; --ws-accent:#79c7f2;
-  --ws-text:#edf7ff; --ws-muted:#acc3d4; --ws-hover:#1d364c;
-  --ws-active:#173e5c; --ws-active-text:#a2dcff; --ws-glass:rgba(14,29,45,.96);
-  --ws-shadow:0 18px 50px rgba(0,12,25,.3);
-  --ws-primary:linear-gradient(135deg,#8ed7ff,#71c8e5); --ws-primary-ink:#103249;
+  --ws-bg:#090d1a; --ws-surface:#101626; --ws-line:#2b3450; --ws-accent:#a5b4fc;
+  --ws-text:#e9edf9; --ws-muted:#acb5cf; --ws-hover:#1c2440;
+  --ws-active:#26234e; --ws-active-text:#c4b5fd; --ws-glass:rgba(12,16,30,.96);
+  --ws-shadow:0 18px 50px rgba(0,0,12,.32);
+  --ws-primary:var(--gradient-mission); --ws-primary-ink:#fff;
 }
 body[data-workspace]{padding-left:var(--ws-rail);box-sizing:border-box}
 .ws-rail{position:fixed;inset:0 auto 0 0;width:var(--ws-rail);z-index:90;background:var(--ws-glass);backdrop-filter:blur(20px);border-right:1px solid var(--ws-line);display:flex;align-items:center;flex-direction:column;padding:18px 8px 12px;gap:17px;font-family:Inter,system-ui,sans-serif;color:var(--ws-text);box-shadow:4px 0 22px rgba(50,65,105,.025)}
@@ -40,7 +47,7 @@ button .lucide,a .lucide{pointer-events:none}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
 @media print{.ws-rail,.ws-skip{display:none!important}body[data-workspace]{padding:0!important}}
 
-/* Shared ocean-blue chrome, including the independent globe viewer. */
+/* Shared neutral chrome, including the independent globe viewer. */
 .ws-rail{box-shadow:4px 0 24px rgba(30,89,126,.025)}
 .ws-link,.ws-help,.ws-theme{font-weight:500;letter-spacing:-.01em}
 .ws-theme{box-shadow:0 1px 3px rgba(20,59,84,.035)}
@@ -50,8 +57,8 @@ button .lucide,a .lucide{pointer-events:none}
 .ws-dialog h2{font-weight:600;letter-spacing:-.035em}
 .ws-guide div{background:var(--ws-surface);border-radius:12px}
 .ws-guide strong{font-size:14px}.ws-guide span{line-height:1.65}
-html[data-theme] body[data-workspace="globe"]{--gl-panel:rgba(255,255,255,.96);--gl-line:#d6e5ee;--gl-ink:#15354d;--gl-muted:#536f82;--gl-button:#fff;--gl-active:#eaf5fc;--gl-accent:#0866bc;--gl-shadow:rgba(19,67,100,.15)}
-html[data-theme="dark"] body[data-workspace="globe"]{--gl-panel:rgba(21,42,62,.96);--gl-line:#2b465e;--gl-ink:#edf7ff;--gl-muted:#acc3d4;--gl-button:#1b344a;--gl-active:#173e5c;--gl-accent:#79c7f2;--gl-shadow:rgba(0,12,25,.28)}
+html[data-theme] body[data-workspace="globe"]{--gl-panel:rgba(255,255,255,.96);--gl-line:#dfe2ef;--gl-ink:#1b2035;--gl-muted:#596177;--gl-button:#fff;--gl-active:#eeebff;--gl-accent:#4338ca;--gl-shadow:rgba(30,24,74,.15)}
+html[data-theme="dark"] body[data-workspace="globe"]{--gl-panel:rgba(16,22,38,.96);--gl-line:#2b3450;--gl-ink:#e9edf9;--gl-muted:#acb5cf;--gl-button:#151b2d;--gl-active:#26234e;--gl-accent:#a5b4fc;--gl-shadow:rgba(0,0,12,.28)}
 body[data-workspace="globe"] .globe-panel{border-radius:15px}
 body[data-workspace="globe"] #globe-controls :is(button,select),body[data-workspace="globe"] #globe-error button{border-radius:9px;transition:background .16s,border-color .16s,color .16s}
 body[data-workspace="globe"] #globe-controls button:not(:disabled):hover,body[data-workspace="globe"] #globe-controls select:hover,body[data-workspace="globe"] #globe-error button:hover{border-color:var(--gl-accent);background:var(--gl-active)}
@@ -61,17 +68,18 @@ body[data-workspace="globe"] :focus-visible{outline:3px solid var(--gl-accent);o
 
 /* Workspace identity is supplemental to the icon, label and current-page state.
    These colors identify tools; scientific good/warning/critical colors stay separate. */
-:root{--accent-mission:#a64c13;--accent-configure:#7046b8;--accent-simulate:#087393;--accent-research:#087867;--accent-spacecraft:#4e5eb5;--accent-payload:#08778a;--accent-earth:#0866bc}
-html[data-theme="dark"]{--accent-mission:#ffc08b;--accent-configure:#c7b0fa;--accent-simulate:#87d5ee;--accent-research:#80dbc7;--accent-spacecraft:#b5bdfa;--accent-payload:#83d9dc;--accent-earth:#8bcefa}
-.ws-link{--nav-accent:var(--accent-earth)}
-.ws-link[data-workspace-link="console"]{--nav-accent:var(--accent-mission)}
-.ws-link[data-workspace-link="configure"]{--nav-accent:var(--accent-configure)}
-.ws-link[data-workspace-link="simulate"]{--nav-accent:var(--accent-simulate)}
-.ws-link[data-workspace-link="experiments"]{--nav-accent:var(--accent-research)}
-.ws-link[data-workspace-link="spacecraft"]{--nav-accent:var(--accent-spacecraft)}
-.ws-link[data-workspace-link="customer"]{--nav-accent:var(--accent-payload)}
+:root{--accent-mission:#4338ca;--accent-configure:#7e22ce;--accent-simulate:#0e7490;--accent-research:#0f766e;--accent-spacecraft:#4f46e5;--accent-payload:#9d174d;--accent-earth:#1d4ed8}
+html[data-theme="dark"]{--accent-mission:#a5b4fc;--accent-configure:#c4b5fd;--accent-simulate:#67e8f9;--accent-research:#5eead4;--accent-spacecraft:#b7b1ff;--accent-payload:#f0a6cd;--accent-earth:#93c5fd}
+.ws-link{--nav-accent:var(--accent-earth);--nav-gradient:var(--gradient-earth)}
+.ws-link[data-workspace-link="console"]{--nav-accent:var(--accent-mission);--nav-gradient:var(--gradient-mission)}
+.ws-link[data-workspace-link="configure"]{--nav-accent:var(--accent-configure);--nav-gradient:var(--gradient-configure)}
+.ws-link[data-workspace-link="simulate"]{--nav-accent:var(--accent-simulate);--nav-gradient:var(--gradient-simulate)}
+.ws-link[data-workspace-link="experiments"]{--nav-accent:var(--accent-research);--nav-gradient:var(--gradient-research)}
+.ws-link[data-workspace-link="spacecraft"]{--nav-accent:var(--accent-spacecraft);--nav-gradient:var(--gradient-spacecraft)}
+.ws-link[data-workspace-link="customer"]{--nav-accent:var(--accent-payload);--nav-gradient:var(--gradient-payload)}
 .ws-link:not([aria-current="page"]) svg{color:var(--nav-accent)}
 .ws-link:hover{background:color-mix(in srgb,var(--nav-accent) 9%,var(--ws-surface));border-color:color-mix(in srgb,var(--nav-accent) 25%,var(--ws-line));color:var(--nav-accent)}
-.ws-link[aria-current="page"],.ws-link[aria-current="page"]:hover{background:linear-gradient(135deg,var(--nav-accent),color-mix(in srgb,var(--nav-accent) 88%,#000));color:var(--ws-primary-ink);border-color:transparent;box-shadow:0 4px 12px color-mix(in srgb,var(--nav-accent) 18%,transparent)}
+.ws-link[aria-current="page"],.ws-link[aria-current="page"]:hover{background:var(--nav-gradient);color:var(--ws-primary-ink);border-color:rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 12px rgba(38,22,88,.16)}
+.ws-link[aria-current="page"]:hover{filter:brightness(1.08)}
 .ws-link[aria-current="page"] svg{color:inherit;stroke-width:2}
 .ws-link:focus-visible{outline-color:var(--nav-accent)}
